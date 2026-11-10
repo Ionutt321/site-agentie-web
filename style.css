@@ -84,7 +84,7 @@ h1, h2, h3, h4, .logo { font-family: 'Space Grotesk', sans-serif; }
 .tab-content.active { display: block; animation: fadeUp 0.6s ease; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Carduri Pachete (Pricing Style curățat de coșul vechi) */
+/* Carduri Pachete (Pricing Style) */
 .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 35px; max-width: 1300px; margin: 0 auto; }
 .menu-card { background: var(--card-bg); border-radius: 20px; padding: 40px; border: 1px solid var(--border-color); backdrop-filter: blur(10px); display: flex; flex-direction: column; transition: 0.4s; position: relative; overflow: hidden; }
 .menu-card:hover { transform: translateY(-10px); border-color: var(--accent-purple); box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15); }
@@ -103,20 +103,6 @@ h1, h2, h3, h4, .logo { font-family: 'Space Grotesk', sans-serif; }
 .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: all 0.4s ease; color: var(--text-muted); line-height: 1.6; }
 .faq-item.active .faq-answer { padding: 0 20px 20px; max-height: 300px; }
 .faq-item.active .faq-question { color: var(--accent-purple); }
-
-/* Chatbot Style Modern */
-.chatbot-widget { position: fixed; bottom: 30px; right: 30px; width: 360px; background: var(--bg-dark); border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 1500; transform: translateY(calc(100% - 70px)); transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); overflow: hidden; }
-.chatbot-widget.open { transform: translateY(0); }
-.chat-header { background: var(--glass); padding: 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: white; }
-.chat-body { height: 400px; display: flex; flex-direction: column; }
-.chat-logs { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: rgba(255,255,255,0.01); }
-.msg { padding: 14px 18px; border-radius: 12px; font-size: 0.95rem; line-height: 1.5; max-width: 85%; }
-.msg.bot { background: rgba(255,255,255,0.05); align-self: flex-start; border: 1px solid var(--border-color); border-bottom-left-radius: 2px; }
-.msg.user { background: var(--accent-blue); align-self: flex-end; border-bottom-right-radius: 2px; color: white; }
-.chat-input-area { padding: 15px; background: var(--glass); border-top: 1px solid var(--border-color); display: flex; gap: 10px; }
-.chat-input-area input { flex: 1; padding: 12px 15px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 8px; color: white; outline: none; font-family: 'Outfit', sans-serif; }
-.chat-input-area button { background: var(--accent-purple); color: white; border: none; width: 45px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-.chat-input-area button:hover { background: var(--accent-blue); }
 
 /* Footer Neomorph */
 .site-footer { border-top: 1px solid var(--border-color); padding: 80px 5% 40px; background: rgba(20,24,36,0.3); }
