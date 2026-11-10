@@ -6,13 +6,13 @@
     <title>Nexora | Agenție de Dezvoltare Web Premium</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <!-- Google Analytics (Păstrat din original) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EBGNG0B33R"></script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4GKMD48Y55"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-EBGNG0B33R');
+      gtag('config', 'G-4GKMD48Y55');
     </script>
 </head>
 <body>
@@ -183,7 +183,15 @@
             btn.classList.add('active'); document.getElementById(tabId).classList.add('active');
         };
 
-        const firebaseConfig = { apiKey: "AIzaSyChCuAExNMLcxRoXTFVPElOJ9dynYgVGjA", authDomain: "pizeria-61550.firebaseapp.com", projectId: "pizeria-61550", storageBucket: "pizeria-61550.firebasestorage.app", messagingSenderId: "655046868435", appId: "1:655046868435:web:b9a0815d10e38e4f1dc326" };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDDNH1J_X9qldqQP4LYmpfwtAkwLiMXV6I",
+            authDomain: "my-website-5f664.firebaseapp.com",
+            projectId: "my-website-5f664",
+            storageBucket: "my-website-5f664.firebasestorage.app",
+            messagingSenderId: "1040584946697",
+            appId: "1:1040584946697:web:402d5a1b197ce49f1cb4d8",
+            measurementId: "G-4GKMD48Y55"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         
