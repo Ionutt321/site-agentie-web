@@ -1,13 +1,13 @@
 {
-  "name": "WebStudio | Web Design & E-commerce",
-  "short_name": "WebStudio",
+  "name": "Nexora | Agenție Web Premium",
+  "short_name": "Nexora",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#c2410c",
+  "background_color": "#07090f",
+  "theme_color": "#3b82f6",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/1005/1005141.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/3262/3262118.png",
       "sizes": "512x512",
       "type": "image/png"
     }
