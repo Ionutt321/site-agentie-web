@@ -31,7 +31,7 @@ h1, h2, h3, h4, .logo { font-family: 'Space Grotesk', sans-serif; }
 .nav-links a:hover, .nav-links a.active { color: var(--accent-blue); text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
 .nav-actions { display: flex; gap: 15px; align-items: center; }
 
-/* Butoane Noi & Agenție */
+/* Butoane */
 .btn-primary { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: white; padding: 14px 32px; border: none; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; position: relative; overflow: hidden; }
 .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: 0.5s; }
 .btn-primary:hover::before { left: 100%; }
@@ -47,7 +47,7 @@ h1, h2, h3, h4, .logo { font-family: 'Space Grotesk', sans-serif; }
 .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border-color); padding: 14px 32px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: 'Space Grotesk', sans-serif; font-size: 1rem; }
 .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.05); }
 
-/* Hero Section cu Elemente Plutitoare */
+/* Hero Section */
 .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 0 10%; position: relative; overflow: hidden; }
 .hero::before { content: ''; position: absolute; top: -20%; right: -10%; width: 600px; height: 600px; background: var(--accent-purple); filter: blur(150px); opacity: 0.2; z-index: -1; }
 .hero::after { content: ''; position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: var(--accent-blue); filter: blur(150px); opacity: 0.2; z-index: -1; }
@@ -56,14 +56,14 @@ h1, h2, h3, h4, .logo { font-family: 'Space Grotesk', sans-serif; }
 .gradient-text { background: linear-gradient(to right, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 650px; margin-bottom: 45px; line-height: 1.7; }
 
-/* Fluxul Agenției (Cum Lucrăm) */
+/* Fluxul Agenției */
 .process-section { padding: 100px 5%; max-width: 1300px; margin: 0 auto; }
 .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; }
 .process-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 35px; border-radius: 12px; position: relative; }
-.step-num { font-size: 3rem; font-weight: 800; color: rgba(255,255,255,0.05); position: absolute; top: 15px; right: 20px; font-family: 'Space Grotesk', sans-serif;}
-.process-card h3 { color: var(--accent-blue); font-size: 1.2rem; margin-bottom: 15px; margin-top: 20px;}
+.step-num { font-size: 3rem; font-weight: 800; color: rgba(255,255,255,0.05); position: absolute; top: 15px; right: 20px; font-family: 'Space Grotesk', sans-serif; }
+.process-card h3 { color: var(--accent-blue); font-size: 1.2rem; margin-bottom: 15px; margin-top: 20px; }
 
-/* Secțiune Ticker Premium (Tehnologii) */
+/* Secțiune Ticker */
 .rollercoaster-section { padding: 40px 0; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); overflow: hidden; }
 .marquee-container { display: flex; width: 200%; animation: scrollTech 25s linear infinite; }
 .marquee-content { display: flex; gap: 80px; align-items: center; padding: 0 40px; }
@@ -71,31 +71,43 @@ h1, h2, h3, h4, .logo { font-family: 'Space Grotesk', sans-serif; }
 .tech-item:hover { color: var(--accent-blue); text-shadow: 0 0 15px rgba(59,130,246,0.5); }
 @keyframes scrollTech { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-/* Secțiunea Pachete / Pricing Tables */
+/* Secțiunea Pachete / Tabs Header Corectat */
 .menu-section { padding: 120px 5%; position: relative; }
 .section-title { text-align: center; margin-bottom: 70px; }
 .section-title h2 { font-size: 3.5rem; font-weight: 700; margin-bottom: 15px; }
 .section-title p { color: var(--text-muted); font-size: 1.2rem; }
 
-.tabs-header { display: flex; justify-content: center; gap: 15px; margin-bottom: 60px; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 12px; display: inline-flex; left: 50%; position: relative; transform: translateX(-50%); border: 1px solid var(--border-color); }
-.tab-btn { background: transparent; border: none; padding: 12px 35px; border-radius: 8px; font-weight: 600; font-size: 1.1rem; cursor: pointer; color: var(--text-muted); transition: 0.3s; font-family: 'Space Grotesk', sans-serif; }
+/* Centrare stabilă fără transform/left relativ care rupea alinierea */
+.tabs-header { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 12px; 
+    margin: 0 auto 60px auto; 
+    background: rgba(255,255,255,0.03); 
+    padding: 8px; 
+    border-radius: 14px; 
+    border: 1px solid var(--border-color);
+    max-width: fit-content;
+    flex-wrap: wrap;
+}
+.tab-btn { background: transparent; border: none; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; color: var(--text-muted); transition: 0.3s; font-family: 'Space Grotesk', sans-serif; white-space: nowrap; }
 .tab-btn.active { background: var(--glass); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
 .tab-content { display: none; }
 .tab-content.active { display: block; animation: fadeUp 0.6s ease; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Carduri Pachete (Pricing Style) */
-.menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 35px; max-width: 1300px; margin: 0 auto; }
+/* Carduri Pachete */
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; max-width: 1300px; margin: 0 auto; }
 .menu-card { background: var(--card-bg); border-radius: 20px; padding: 40px; border: 1px solid var(--border-color); backdrop-filter: blur(10px); display: flex; flex-direction: column; transition: 0.4s; position: relative; overflow: hidden; }
 .menu-card:hover { transform: translateY(-10px); border-color: var(--accent-purple); box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15); }
 .menu-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); opacity: 0; transition: 0.4s; }
 .menu-card:hover::before { opacity: 1; }
 .card-info h3 { font-size: 1.8rem; margin-bottom: 15px; color: white; }
-.card-info p { font-size: 1rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 30px; }
 .price { font-size: 2.5rem; font-weight: 800; color: white; font-family: 'Space Grotesk', sans-serif; display: block; margin-bottom: 25px; }
 .card-bottom { margin-top: auto; }
 
-/* Secțiune FAQ */
+/* FAQ */
 .faq-section { padding: 100px 5%; max-width: 900px; margin: 0 auto; }
 .faq-item { background: var(--card-bg); border: 1px solid var(--border-color); margin-bottom: 15px; border-radius: 12px; overflow: hidden; }
 .faq-question { padding: 20px; font-size: 1.2rem; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: 'Space Grotesk', sans-serif; transition: 0.3s; }
@@ -104,7 +116,7 @@ h1, h2, h3, h4, .logo { font-family: 'Space Grotesk', sans-serif; }
 .faq-item.active .faq-answer { padding: 0 20px 20px; max-height: 300px; }
 .faq-item.active .faq-question { color: var(--accent-purple); }
 
-/* Footer Neomorph */
+/* Footer */
 .site-footer { border-top: 1px solid var(--border-color); padding: 80px 5% 40px; background: rgba(20,24,36,0.3); }
 .footer-container { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 60px; }
 .footer-col h3 { color: white; margin-bottom: 25px; font-size: 1.5rem; }
@@ -112,22 +124,61 @@ h1, h2, h3, h4, .logo { font-family: 'Space Grotesk', sans-serif; }
 .footer-form input { width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 8px; color: white; font-family: inherit; }
 .footer-form input:focus { border-color: var(--accent-blue); outline: none; }
 
-/* Modals & Formulare Lead Generation */
-.popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 3000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.4s; }
-.popup-overlay.show { opacity: 1; visibility: visible; }
-.popup-box { background: var(--bg-dark); padding: 40px; border-radius: 20px; border: 1px solid var(--border-color); max-width: 500px; width: 90%; position: relative; transform: translateY(30px); transition: 0.4s; box-shadow: 0 30px 60px rgba(0,0,0,0.6); }
+/* Modal Lead Generation cu Z-index și stări de vizibilitate garantate */
+.popup-overlay { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.85); 
+    backdrop-filter: blur(10px); 
+    z-index: 9999; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    opacity: 0; 
+    visibility: hidden; 
+    pointer-events: none; 
+    transition: all 0.3s ease; 
+}
+.popup-overlay.show { 
+    opacity: 1; 
+    visibility: visible; 
+    pointer-events: auto; 
+}
+.popup-box { 
+    background: var(--bg-dark); 
+    padding: 40px; 
+    border-radius: 20px; 
+    border: 1px solid var(--border-color); 
+    max-width: 500px; 
+    width: 90%; 
+    position: relative; 
+    transform: translateY(20px); 
+    transition: 0.3s; 
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8); 
+}
 .popup-overlay.show .popup-box { transform: translateY(0); }
 .close-popup { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 2rem; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
 .close-popup:hover { color: white; }
-#checkout-form .form-group input, #checkout-form .form-group textarea, #checkout-form .form-group select { background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: white; }
-#checkout-form .form-group input:focus, #checkout-form .form-group textarea:focus, #checkout-form .form-group select:focus { border-color: var(--accent-blue); outline: none; }
+#checkout-form .form-group input, 
+#checkout-form .form-group textarea { 
+    background: rgba(0,0,0,0.3); 
+    border: 1px solid var(--border-color); 
+    color: white; 
+    font-family: inherit; 
+}
+#checkout-form .form-group input:focus, 
+#checkout-form .form-group textarea:focus { 
+    border-color: var(--accent-blue); 
+    outline: none; 
+}
 
-/* Resetări Utilitare */
-.intro-loader { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: flex; align-items: center; justify-content: center; transition: 0.8s; }
+/* Loader */
+.intro-loader { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: flex; align-items: center; justify-content: center; transition: 0.6s; }
 .intro-loader.hidden { opacity: 0; visibility: hidden; }
 
 @media (max-width: 768px) {
     .hero h1 { font-size: 3rem; }
     .section-title h2 { font-size: 2.5rem; }
-    .tabs-header { flex-direction: column; width: 100%; border-radius: 8px; }
+    .tabs-header { flex-direction: column; width: 100%; }
+    .tab-btn { width: 100%; text-align: center; }
 }
