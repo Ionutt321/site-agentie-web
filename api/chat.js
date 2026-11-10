@@ -15,52 +15,31 @@ export default async function handler(req, res) {
         const rawMessages = Array.isArray(body?.messages) ? body.messages : [];
         const userMessages = rawMessages.filter(m => m && m.role && m.content);
 
-        const currentMenu = body.currentMenu || "Meniul este momentan indisponibil.";
-        const storeRules = body.storeRules || "Regulile logistice nu sunt configurate.";
+        const currentMenu = body.currentMenu || "Pachetele noastre nu sunt momentan disponibile.";
 
         let apiKey = (process.env.OPENROUTER_API_KEY || "").trim().split(/\s+/)[0];
         if (!apiKey) {
             return res.status(200).json({ reply: "Cheia OPENROUTER_API_KEY lipsește din setările Vercel." });
         }
 
-        const PHONE_NUMBER = "40700000000";
-
         const systemPrompt = {
             role: "system",
-            content: `Ești asistentul virtual de comenzi al restaurantului Di'vino din Brașov. Răspunzi politicos, prietenos și scurt în limba română.
+            content: `Ești consultantul tehnic și de vânzări al agenției de dezvoltare web NEXORA. 
+Răspunzi extrem de politicos, profesionist, prietenos și concis în limba română.
 
 INTERDICȚII STRICTE DE FORMAT:
 - NU folosi niciodată caractere Markdown: fără steluțe (** sau *), fără diez (#), fără ghilimele speciale. Scrie doar text simplu și curat.
+- NU face liste lungi inutile. Fii scurt, ca într-o discuție pe chat.
 
-MENIUL ACTUAL ȘI OFERTE DISPONIBILE:
+SERVICIILE ȘI PREȚURILE NOASTRE (PACHETE WEB):
 ${currentMenu}
 
-REGULI PRIVIND PROMOȚIILE ȘI PREȚURILE:
-1. Când clientul întreabă de oferte, promoții sau reduceri, răspunde clar și complet:
-   - Menționează reducerile de preț active (arată prețul vechi și prețul redus).
-   - Menționează preparatele cu oferta 1+1 GRATIS (explică-i că la fiecare bucată comandată, mai primește una gratis).
-2. Prețul final de plată este întotdeauna cel redus specificat în listă. Nu inventa alte reduceri sau calcule matematice.
-3. Oferă DOAR preparatele existente în lista de mai sus. Dacă cere ceva ce nu e în listă, spune-i politicos că nu îl aveți în meniu.
+SCOPUL TĂU (GENERARE DE LEAD-URI):
+1. Când vizitatorul întreabă ce faceți, explică-i scurt că NEXORA construiește platforme web ultra-rapide și magazine online care generează vânzări.
+2. Dacă te întreabă de prețuri, prezintă-i scurt opțiunile din pachetele de mai sus (menționând diferența dintre prețul original și cel redus, dacă există).
+3. Cel mai important: Dacă vizitatorul pare interesat, îndrumă-l să apese butonul albastru 'Cere Ofertă' din colțul dreapta-sus al ecranului sau să apese direct pe butonul 'Alege Pachetul' de sub serviciul dorit. Spune-i că acolo va completa un scurt brief și va fi sunat în maxim 24h de un expert uman din echipa noastră pentru consultanță gratuită.
 
-GESTIUNE COȘ (COMENZI ASCUNSE PENTRU SITE):
-Când clientul cere să adaugi, să modifici sau să ștergi preparate, răspunde-i natural și scurt în text, iar la sfârșitul mesajului include comenzile speciale exacte (folosind denumirea exactă din meniu):
-- Pentru adăugare: [ADAUGA: Nume_Exact, Cantitate] (sau [ADAUGA: Nume_Exact] pentru 1 buc)
-- Pentru scădere: [SCADE: Nume_Exact, Cantitate] (sau [SCADE: Nume_Exact] pentru 1 buc)
-- Pentru eliminare completă: [STERGE: Nume_Exact]
-Exemple:
-- Client: "Pune o shaorma de pui și două porții de falafel" -> Răspuns: "Sigur, am adăugat o shaorma de pui și 2 porții de falafel în coș. [ADAUGA: Shaorma pui, 1] [ADAUGA: falafel, 2]"
-- Client: "Mai scade o shaorma" -> Răspuns: "Am redus o bucată din coș. [SCADE: Shaorma pui, 1]"
-- Client: "Scoate falafelul" -> Răspuns: "Am șters falafelul din coșul tău. [STERGE: falafel]"
-Aceste etichete din paranteze drepte vor fi curățate automat, așa că vorbește firesc.
-
-REGULI LOGISTICE:
-${storeRules}
-
-CONVERSAȚIE ȘI FINALIZARE:
-- Nu cere adresa sau metoda de plată la început. Discută întâi despre ce dorește să comande.
-- Doar la final, când clientul vrea să finalizeze, cere: Livrare sau Ridicare, Adresa, Mențiuni și Metoda de plată.
-- Când comanda este completă, generează butonul WhatsApp:
-<a href="https://wa.me/${PHONE_NUMBER}?text=Comanda%20Di%27vino:%0A-Produse:%20[PRODUSE]%0A-Mentiuni:%20[COMENTARII]%0A-Plata:%20[METODA_PLATA]%0A-Livrare/Ridicare:%20[ADRESA]" target="_blank" class="btn-primary" style="display:inline-block; padding:10px 20px; text-decoration:none; margin-top:10px; border-radius:20px;">Trimite comanda pe WhatsApp</a>`
+Nu mai există comenzi ascunse sau coș de cumpărături. Trebuie doar să-i răspunzi la întrebări și să-l inviți să completeze formularul de ofertă.`
         };
 
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -68,23 +47,23 @@ CONVERSAȚIE ȘI FINALIZARE:
             headers: {
                 "Authorization": `Bearer ${apiKey}`,
                 "Content-Type": "application/json",
-                "HTTP-Referer": "https://vercel.app",
-                "X-Title": "Divino Assistant"
+                "HTTP-Referer": "https://nexora.ro",
+                "X-Title": "Nexora Consultant"
             },
             body: JSON.stringify({
-                model: "openrouter/free",
+                model: "google/gemini-2.5-flash:free",
                 messages: [systemPrompt, ...userMessages],
-                temperature: 0.2
+                temperature: 0.3
             })
         });
 
         const data = await response.json();
         
         if (!response.ok || data.error) {
-            return res.status(200).json({ reply: `Eroare OpenRouter: ${data.error?.message || "Serviciul gratuit este temporar indisponibil. Te rog reîncearcă."}` });
+            return res.status(200).json({ reply: `Eroare AI: ${data.error?.message || "Serviciul este temporar indisponibil. Te rog folosește formularul de contact."}` });
         }
 
-        let rawReply = data.choices?.[0]?.message?.content || "Nu am putut genera un răspuns.";
+        let rawReply = data.choices?.[0]?.message?.content || "Nu am putut genera un răspuns. Apasă butonul Cere Ofertă.";
 
         // Curățare forțată Markdown
         const cleanReply = rawReply
@@ -96,6 +75,6 @@ CONVERSAȚIE ȘI FINALIZARE:
         return res.status(200).json({ reply: cleanReply });
 
     } catch (error) {
-        return res.status(200).json({ reply: `Eroare server: ${error.message}` });
+        return res.status(200).json({ reply: `Eroare de sistem. Te rugăm să apesezi pe butonul 'Cere Ofertă'.` });
     }
 }
