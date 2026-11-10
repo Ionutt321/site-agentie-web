@@ -38,7 +38,8 @@
 
     <section id="hero" class="hero">
         <div class="reveal-up">
-            <span class="hero-badge"><i class="fas fa-star" style="color: #fbbf24;"></i> 5.0 Rating | Livrare în 7-14 zile</span>
+            <!-- Badge 100% real și axat pe valoare tehnică, fără rating fals -->
+            <span class="hero-badge"><i class="fas fa-bolt" style="color: #60a5fa;"></i> Arhitectură Web Modernă | Livrare în 7-14 zile</span>
             <h1>CONSTRUIM ECOSISTEME DIGITALE<br><span class="gradient-text">CARE GENEREAZĂ CLIENȚI</span></h1>
             <p>Nu facem doar „site-uri frumoase”. Creăm platforme web ultra-rapide și magazine online cu arhitectură gândită pentru conversie și scalare B2B/B2C.</p>
             <div style="display:flex; gap:15px; flex-wrap:wrap;">
@@ -48,7 +49,7 @@
         </div>
     </section>
 
-    <!-- Secțiunea Portofoliu (Momentan în așteptare de proiecte reale) -->
+    <!-- Secțiunea Portofoliu -->
     <section id="portofoliu" class="process-section reveal-up" style="background: rgba(255,255,255,0.01);">
         <div class="section-title">
             <h2>Proiecte Recente</h2>
@@ -112,7 +113,7 @@
             <p>Prețuri transparente. Livrăm rapid, fără costuri ascunse.</p>
         </div>
         
-        <div class="tabs-header reveal-up" style="flex-wrap: wrap; justify-content: center;">
+        <div class="tabs-header reveal-up">
             <button class="tab-btn active" onclick="switchTab('tab-prezentare', this)">Site-uri de Prezentare</button>
             <button class="tab-btn" onclick="switchTab('tab-ecommerce', this)">Magazine Online (E-Commerce)</button>
             <button class="tab-btn" onclick="switchTab('tab-custom', this)">Soluții Custom & Corporate</button>
@@ -141,15 +142,15 @@
         <div class="faq-container">
             <div class="faq-item" onclick="this.classList.toggle('active')">
                 <div class="faq-question">Cât costă mai exact un site web? <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer"><br>Fiecare afacere este unică. Un site de prezentare complet optimizat pornește de obicei de la prețul afișat în pachetul Starter, iar un magazin online variază în funcție de numărul de produse și integrările dorite. Cere o ofertă gratuită pentru a primi o estimare exactă în 24h.</div>
+                <div class="faq-answer"><br>Fiecare afacere este unică. Un site de prezentare pornește de la prețul pachetului Starter, iar un magazin online variază în funcție de numărul de produse și integrările cerute. Cere o ofertă gratuită pentru estimare exactă în 24h.</div>
             </div>
             <div class="faq-item" onclick="this.classList.toggle('active')">
                 <div class="faq-question">Cum se desfășoară procesul de plată? <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer"><br>Pentru siguranța ambelor părți și dedicarea echipei noastre, facturăm un avans de 50% înainte de începerea propriu-zisă a lucrărilor (pe bază de contract semnat), iar restul de 50% se achită doar la predarea proiectului complet funcțional și aprobat de tine.</div>
+                <div class="faq-answer"><br>Facturăm un avans de 50% înainte de începerea lucrărilor (pe bază de contract semnat), iar restul de 50% se achită doar la predarea proiectului complet funcțional și aprobat de tine.</div>
             </div>
             <div class="faq-item" onclick="this.classList.toggle('active')">
                 <div class="faq-question">Cât durează dezvoltarea și lansarea? <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer"><br>Ne mișcăm rapid. Un site de prezentare este gata, testat și lansat de obicei în 7-14 zile. Pentru platforme e-commerce sau aplicații customizate mai complexe, termenul poate varia între 3 și 6 săptămâni.</div>
+                <div class="faq-answer"><br>Un site de prezentare este gata de lansare în 7-14 zile. Pentru magazine online sau platforme customizate, termenul variază între 3 și 6 săptămâni.</div>
             </div>
         </div>
     </section>
@@ -178,10 +179,10 @@
         </div>
     </footer>
 
-    <!-- Formular Direct de Ofertă (Ultra-Scurt, Fără AI, Fără Metode de plată) -->
+    <!-- Formular Popup Direct de Ofertă -->
     <div class="popup-overlay" id="checkout-modal">
         <div class="popup-box" style="max-width: 450px;">
-            <button class="close-popup" onclick="document.getElementById('checkout-modal').classList.remove('show')">&times;</button>
+            <button class="close-popup" onclick="closeModal()">&times;</button>
             <h2 style="margin-bottom: 20px; text-align: center;" class="gradient-text">Hai să discutăm</h2>
             <p style="text-align: center; color: var(--text-muted); margin-bottom:25px; font-size: 0.95rem;">Un expert Nexora te va contacta telefonic sau pe email în max 24h.</p>
             
@@ -198,30 +199,47 @@
                     <textarea id="order-address" required placeholder="Descrie pe scurt ce ai nevoie (Ex: Vreau un site de prezentare pentru un cabinet medical...)" rows="4" style="width: 100%; padding: 14px; border-radius: 8px; resize: none;"></textarea>
                 </div>
                 
-                <div class="form-group" style="margin-bottom: 25px; display: none;">
-                    <input type="text" id="order-notes" placeholder="Sistem - Pachet ascuns" style="width: 100%;">
-                </div>
+                <input type="hidden" id="order-notes" value="">
 
                 <button type="submit" class="btn-primary" id="btn-submit-order" style="width: 100%; padding: 16px; font-size:1.1rem; border-radius:12px;">Trimite și te sunăm</button>
             </form>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Scripturile de bază -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="script.js?v=3.0"></script>
+
     <script>
+        // Funcții globale sigure pentru deschiderea și închiderea modalului
+        window.openModal = function(packageName = 'Contact General', price = 0) {
+            const modal = document.getElementById('checkout-modal');
+            if (modal) modal.classList.add('show');
+            const notes = document.getElementById('order-notes');
+            if (notes) {
+                notes.value = packageName !== 'Contact General' ? `Pachet vizat: ${packageName} (${price} Lei)` : 'Cerere Generală';
+            }
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('checkout-modal');
+            if (modal) modal.classList.remove('show');
+        };
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => observer.observe(el));
 
-        window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-loader').classList.add('hidden'); }, 800); });
+        window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-loader').classList.add('hidden'); }, 600); });
 
         window.switchTab = function(tabId, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            btn.classList.add('active'); document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active'); 
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
         };
 
         const firebaseConfig = {
@@ -236,6 +254,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // Încărcare dinamică a pachetelor din Firebase
         db.collection('products').where('active', '==', true).onSnapshot(snapshot => {
             const gridPrezentare = document.getElementById('menu-grid-prezentare');
             const gridEcommerce = document.getElementById('menu-grid-ecommerce');
@@ -253,7 +272,6 @@
                 let btnText = "Cere ofertă exactă";
                 let displayPrice = "";
                 
-                // Setăm prețul de afișare bazat pe categoria pachetului (Trater style)
                 if(p.category === 'custom') {
                     displayPrice = `<span class="price" style="font-size:1.8rem; margin-bottom:15px; display:block;">Pe bază de proiect</span>`;
                     btnText = "Programează Consultanță";
@@ -264,9 +282,15 @@
                     displayPrice = `<span style="font-size:1.1rem; color:var(--text-muted); display:block; margin-bottom:5px;">Preț de la</span><span class="price" style="font-size:2.2rem; margin-bottom:20px; display:block; font-weight:800;">${p.price} Lei</span>`;
                 }
 
-                // Generare listă de bife din descriere (transformăm textul cu ✔️ în listă stilizată)
-                let formattedDesc = p.description.replace(/✔️/g, '<li style="margin-bottom:10px; display:flex; gap:10px; align-items:flex-start;"><i class="fas fa-check" style="color:var(--success); margin-top:4px;"></i> <span>').replace(/<br>/g, '</span></li>');
-                if(formattedDesc.includes('<li')) formattedDesc = `<ul style="list-style:none; padding:0; margin-bottom:30px; color:var(--text-main); font-size:0.95rem;">${formattedDesc}</span></li></ul>`;
+                let formattedDesc = (p.description || '')
+                    .replace(/✔️/g, '<li style="margin-bottom:10px; display:flex; gap:10px; align-items:flex-start;"><i class="fas fa-check" style="color:var(--success); margin-top:4px;"></i> <span>')
+                    .replace(/<br\s*\/?>/gi, '</span></li>');
+                
+                if(formattedDesc.includes('<li')) {
+                    formattedDesc = `<ul style="list-style:none; padding:0; margin-bottom:30px; color:var(--text-main); font-size:0.95rem;">${formattedDesc}</span></li></ul>`;
+                }
+
+                const safeName = (p.name || '').replace(/'/g, "\\'");
 
                 const cardHTML = `
                 <div class="menu-card reveal-up">
@@ -276,7 +300,7 @@
                         ${displayPrice}
                         ${formattedDesc}
                         <div class="card-bottom" style="margin-top:auto;">
-                            <button onclick="openModal('${p.name}', ${p.price})" class="btn-primary" style="width:100%; border-radius:8px;">${btnText}</button>
+                            <button onclick="openModal('${safeName}', ${p.price || 0})" class="btn-primary" style="width:100%; border-radius:8px;">${btnText}</button>
                         </div>
                     </div>
                 </div>`;
