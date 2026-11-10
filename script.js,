@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Navbar Scroll Effect
+    // 1. Efectul de fundal pentru meniul de navigare la scroll
     const navbar = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
         if (navbar) {
@@ -8,134 +8,92 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 2. Chatbot AI UI Toggle
-    const chatWidget = document.getElementById('chatbot-widget');
-    const chatHeader = document.getElementById('chat-toggle');
-    const chatIcon = document.getElementById('chat-icon');
-    if (chatHeader && chatWidget) {
-        chatHeader.addEventListener('click', () => {
-            chatWidget.classList.toggle('open');
-            chatIcon.classList.toggle('fa-chevron-down');
-            chatIcon.classList.toggle('fa-chevron-up');
-        });
-    }
-
-    // 3. Chatbot Logic & API Call
-    const chatInput = document.getElementById('chat-input');
-    const chatSendBtn = document.getElementById('chat-send');
-    const chatLogs = document.getElementById('chat-logs');
-    let messageHistory = []; 
-
-    async function sendChatMessage() {
-        const text = chatInput.value.trim();
-        if (!text) return;
-        
-        chatLogs.innerHTML += `<div class="msg user">${text}</div>`;
-        chatInput.value = '';
-        chatLogs.scrollTop = chatLogs.scrollHeight; 
-        messageHistory.push({ role: "user", content: text });
-
-        const loadingId = 'load-' + Date.now();
-        chatLogs.innerHTML += `<div id="${loadingId}" class="msg bot" style="color:#64748b;"><i class="fas fa-ellipsis-h fa-fade"></i> Procesare...</div>`;
-        chatLogs.scrollTop = chatLogs.scrollHeight;
-
-        try {
-            const availableProducts = (window.dbProductsList || []).map(p => `${p.name} - Preț estimativ: ${p.price} Euro`).join('\n');
-
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    messages: messageHistory,
-                    currentMenu: availableProducts
-                })
-            });
-            const data = await response.json();
-            document.getElementById(loadingId).remove();
-            
-            if (data.reply) {
-                const botReply = data.reply.trim().replace(/\n/g, '<br>');
-                chatLogs.innerHTML += `<div class="msg bot">${botReply}</div>`;
-                messageHistory.push({ role: "assistant", content: data.reply }); 
-            } else {
-                chatLogs.innerHTML += `<div class="msg bot" style="color:red;">Scuze, a apărut o problemă de conexiune.</div>`;
-            }
-            chatLogs.scrollTop = chatLogs.scrollHeight;
-        } catch (err) {
-            document.getElementById(loadingId).remove();
-            chatLogs.innerHTML += `<div class="msg bot" style="color:red;">Eroare de server. Ne poți contacta direct prin formular.</div>`;
-            chatLogs.scrollTop = chatLogs.scrollHeight;
-        }
-    }
-    
-    if (chatSendBtn) chatSendBtn.addEventListener('click', sendChatMessage);
-    if (chatInput) chatInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendChatMessage(); });
-
-    // 4. Modal Contact (Generare Lead-uri)
+    // 2. Deschiderea Modalului de Contact / Cere Ofertă
     window.openModal = function(packageName = 'Contact General', price = 0) {
         document.getElementById('checkout-modal').classList.add('show');
         const notes = document.getElementById('order-notes');
-        if(notes) {
-            notes.value = packageName !== 'Contact General' ? `Pachet vizat: ${packageName} (${price}€)` : '';
+        
+        if (notes) {
+            // Precompletăm ascuns pachetul ales de client, dacă a dat click pe un card anume
+            if (packageName !== 'Contact General') {
+                notes.value = `Pachet vizat: ${packageName} (Preț pornire: ${price} Lei)`;
+            } else {
+                notes.value = 'Cerere Ofertă Generală';
+            }
         }
     };
 
-    // 5. Submit Formular "Cere Ofertă" (Creează comanda în Firebase)
+    // 3. Trimiterea Formularului Principal de Lead-uri (Cere Ofertă)
     const checkoutForm = document.getElementById('checkout-form');
     if (checkoutForm) {
         checkoutForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitBtn = document.getElementById('btn-submit-order');
-            submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
+            submitBtn.disabled = true; 
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
 
             const orderData = {
                 customerName: document.getElementById('order-name').value.trim(),
                 customerPhone: document.getElementById('order-phone').value.trim(),
                 projectDescription: document.getElementById('order-address').value.trim(),
-                notes: document.getElementById('order-notes').value.trim(),
+                packageInterested: document.getElementById('order-notes').value.trim(),
                 status: 'lead_nou', 
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             try {
-                // Trimite datele în colecția 'orders' din Firebase
+                // Salvează cererea în baza de date Firebase (colecția orders)
                 await firebase.firestore().collection('orders').add(orderData);
                 
-                // Track Google Analytics lead
-                if (typeof gtag === 'function') gtag('event', 'generate_lead', { currency: 'EUR', value: 100 });
+                // Trimite evenimentul de conversie către Google Analytics
+                if (typeof gtag === 'function') {
+                    gtag('event', 'generate_lead', { currency: 'RON', value: 100 });
+                }
                 
-                // Mesaj de succes
+                // Mesaj de succes pe ecran
                 checkoutForm.innerHTML = `
                     <div style="text-align:center; padding: 20px 0;">
-                        <i class="fas fa-check-circle" style="font-size:4rem; color:var(--success); margin-bottom:15px;"></i>
-                        <h2 style="color:var(--text-main);">Cererea a fost trimisă!</h2>
-                        <p style="color:var(--text-muted); margin-top:10px;">Îți mulțumim! Un expert din echipa Nexora te va contacta în 24h.</p>
-                        <button type="button" onclick="document.getElementById('checkout-modal').classList.remove('show'); location.reload();" class="btn-primary" style="margin-top:20px; width:100%;">Închide</button>
+                        <i class="fas fa-check-circle" style="font-size:4.5rem; color:var(--success); margin-bottom:20px;"></i>
+                        <h2 style="color:var(--text-main); font-size: 1.8rem; margin-bottom: 10px;">Cererea a fost trimisă!</h2>
+                        <p style="color:var(--text-muted); font-size: 1.1rem;">Îți mulțumim! Un expert din echipa Nexora va analiza proiectul tău și te va contacta în scurt timp.</p>
+                        <button type="button" onclick="document.getElementById('checkout-modal').classList.remove('show'); location.reload();" class="btn-primary" style="margin-top:25px; width:100%; padding: 14px;">Închide</button>
                     </div>
                 `;
             } catch (error) {
-                console.error(error);
-                submitBtn.disabled = false; submitBtn.innerHTML = 'Eroare. Încearcă din nou!';
+                console.error("Eroare la trimitere:", error);
+                submitBtn.disabled = false; 
+                submitBtn.innerHTML = 'Eroare. Încearcă din nou!';
             }
         });
     }
 
-    // 6. Submit Formular "Audit Gratuit" din Footer
+    // 4. Trimiterea Formularului de "Audit Gratuit" din Footer
     const footForm = document.getElementById('footer-form');
-    if(footForm) {
+    if (footForm) {
         footForm.addEventListener('submit', async (e) => { 
             e.preventDefault(); 
             const btn = footForm.querySelector('button');
-            btn.disabled = true; btn.innerHTML = 'Se trimite...';
+            btn.disabled = true; 
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
+            
             try {
                 await firebase.firestore().collection('subscribers').add({ 
                     name: document.getElementById('foot-name').value.trim(), 
                     email: document.getElementById('foot-email').value.trim(), 
-                    type: 'solicitare_audit',
+                    type: 'solicitare_audit_gratuit',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp() 
                 });
-                footForm.innerHTML = '<h3 style="color:#10b981; text-align:center;"><i class="fas fa-check"></i> Audit Solicitat!</h3><p style="text-align:center; font-size:0.9rem;">Te vom contacta pe email.</p>';
-            } catch(err) { btn.disabled = false; btn.innerHTML = 'Eroare'; }
+                
+                footForm.innerHTML = `
+                    <div style="text-align:center; background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 8px; border: 1px solid #10b981;">
+                        <h3 style="color:#10b981; margin-bottom: 5px;"><i class="fas fa-check"></i> Audit Solicitat!</h3>
+                        <p style="color: var(--text-main); font-size:0.9rem;">Verifică-ți adresa de email în curând.</p>
+                    </div>`;
+            } catch(err) { 
+                console.error("Eroare audit:", err);
+                btn.disabled = false; 
+                btn.innerHTML = 'Eroare. Reîncearcă'; 
+            }
         });
     }
 });
