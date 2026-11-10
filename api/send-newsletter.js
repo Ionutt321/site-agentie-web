@@ -16,15 +16,15 @@ export default async function handler(req, res) {
         }
 
         const htmlContent = `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
-                ${image ? `<img src="${image}" alt="WebStudio Oferta" style="width: 100%; border-radius: 8px; margin-bottom: 20px;">` : ''}
-                <h2 style="color: #c2410c; margin-bottom: 15px;">${subject}</h2>
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
+                ${image ? `<img src="${image}" alt="Nexora" style="width: 100%; border-radius: 8px; margin-bottom: 20px;">` : ''}
+                <h2 style="color: #3b82f6; margin-bottom: 15px;">${subject}</h2>
                 <div style="font-size: 16px; color: #334155; line-height: 1.6; white-space: pre-wrap;">
                     ${body}
                 </div>
                 <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
                 <div style="text-align: center; color: #94a3b8; font-size: 12px;">
-                    <p>Ai primit acest email deoarece te-ai abonat la noutățile WebStudio.</p>
+                    <p>Ai primit acest mesaj deoarece ai solicitat un audit sau te-ai abonat la noutățile <strong>NEXORA</strong>.</p>
                 </div>
             </div>
         `;
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                from: "WebStudio Newsletter <onboarding@resend.dev>", 
+                from: "Nexora <onboarding@resend.dev>", 
                 to: emails, 
                 subject: subject,
                 html: htmlContent
