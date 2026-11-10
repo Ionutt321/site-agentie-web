@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexora | Agenție de Dezvoltare Web & E-Commerce</title>
+    <title>Nexora | Agenție Web Premium</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- Google Analytics -->
@@ -24,12 +24,12 @@
         <ul class="nav-links hide-mobile">
             <li><a href="#hero" class="active">Acasă</a></li>
             <li><a href="#proces">Cum Lucrăm</a></li>
-            <li><a href="#pachete">Servicii</a></li>
+            <li><a href="#portofoliu">Portofoliu</a></li>
+            <li><a href="#pachete">Pachete & Prețuri</a></li>
             <li><a href="#faq">FAQ</a></li>
         </ul>
         <div class="nav-actions">
-            <!-- Buton direct către formularul de ofertă -->
-            <button onclick="openModal('Contact General')" class="btn-primary pulse-btn">
+            <button onclick="openModal('Contact General', 0)" class="btn-primary pulse-btn">
                 <i class="fas fa-paper-plane" style="margin-right: 5px;"></i> Cere Ofertă
             </button>
         </div>
@@ -38,17 +38,30 @@
 
     <section id="hero" class="hero">
         <div class="reveal-up">
-            <span class="hero-badge"><i class="fas fa-check-circle"></i> Peste 150+ Proiecte Livrate la Standarde Globale</span>
-            <h1>TRANSFORMĂM IDEILE ÎN<br><span class="gradient-text">PLATFORME DE SUCCES</span></h1>
-            <p>Nu creăm doar site-uri, construim ecosisteme digitale care aduc clienți. De la landing page-uri rapide la magazine online complexe cu automatizări.</p>
+            <span class="hero-badge"><i class="fas fa-star" style="color: #fbbf24;"></i> 5.0 Rating | Livrare în 7-14 zile</span>
+            <h1>CONSTRUIM ECOSISTEME DIGITALE<br><span class="gradient-text">CARE GENEREAZĂ CLIENȚI</span></h1>
+            <p>Nu facem doar „site-uri frumoase”. Creăm platforme web ultra-rapide și magazine online cu arhitectură gândită pentru conversie și scalare B2B/B2C.</p>
             <div style="display:flex; gap:15px; flex-wrap:wrap;">
                 <button onclick="document.getElementById('pachete').scrollIntoView({behavior:'smooth'})" class="btn-primary">Vezi Pachetele Web</button>
-                <button onclick="openModal('Audit Website Gratuit')" class="btn-outline">Ai deja un site? Verifică-l gratuit</button>
+                <button onclick="document.getElementById('portofoliu').scrollIntoView({behavior:'smooth'})" class="btn-outline">Vezi Portofoliul</button>
             </div>
         </div>
     </section>
 
-    <!-- Secțiune nouă inspirată din Trater Solutions -->
+    <!-- Secțiunea Portofoliu (Momentan în așteptare de proiecte reale) -->
+    <section id="portofoliu" class="process-section reveal-up" style="background: rgba(255,255,255,0.01);">
+        <div class="section-title">
+            <h2>Proiecte Recente</h2>
+            <p>Platforme web care fac diferența în piață.</p>
+        </div>
+        <div class="process-grid" style="text-align: center; border: 1px dashed var(--border-color); padding: 60px; border-radius: 12px; grid-template-columns: 1fr;">
+            <i class="fas fa-laptop-code" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 20px;"></i>
+            <h3 style="color: var(--text-main);">Portofoliul se actualizează...</h3>
+            <p style="color: var(--text-muted);">Urmează să încărcăm ultimele studii de caz și mockup-uri vizuale.</p>
+        </div>
+    </section>
+
+    <!-- Fluxul de lucru -->
     <section id="proces" class="process-section reveal-up">
         <div class="section-title">
             <h2>Totul lucrează împreună</h2>
@@ -57,18 +70,18 @@
         <div class="process-grid">
             <div class="process-card">
                 <div class="step-num">01</div>
-                <h3>WEBSITE & E-COMMERCE</h3>
-                <p>Construim o platformă ultra-rapidă, optimizată UX/UI, unde vizitatorii găsesc instant ceea ce caută.</p>
+                <h3>ARHITECTURĂ WEB</h3>
+                <p>Construim o platformă ultra-rapidă, cu design modern și interfață (UX) optimizată pentru utilizator.</p>
             </div>
             <div class="process-card">
                 <div class="step-num">02</div>
                 <h3>OPTIMIZARE SEO</h3>
-                <p>Implementăm structuri tehnice perfecte pentru Google. Site-ul tău trebuie să fie găsit de clienți gratuit.</p>
+                <p>Implementăm structuri tehnice perfecte pentru Google. Site-ul tău trebuie să fie găsit organic de clienți.</p>
             </div>
             <div class="process-card">
                 <div class="step-num">03</div>
                 <h3>CONVERSIE & SCALARE</h3>
-                <p>Integrăm formulare, sisteme de plată online (Stripe, Netopia) și automatizări pentru a eficientiza afacerea.</p>
+                <p>Integrăm formulare inteligente, sisteme de plată online și automatizări pentru a-ți eficientiza afacerea.</p>
             </div>
         </div>
     </section>
@@ -78,27 +91,32 @@
             <div class="marquee-content">
                 <span class="tech-item"><i class="fab fa-react"></i> React JS</span>
                 <span class="tech-item"><i class="fab fa-node-js"></i> Node.js</span>
+                <span class="tech-item"><i class="fas fa-database"></i> Firebase</span>
                 <span class="tech-item"><i class="fab fa-wordpress"></i> WordPress Custom</span>
-                <span class="tech-item"><i class="fab fa-php"></i> Laravel / PHP</span>
+                <span class="tech-item"><i class="fab fa-php"></i> Laravel</span>
                 <span class="tech-item"><i class="fab fa-figma"></i> UI/UX Design</span>
                 <span class="tech-item"><i class="fab fa-react"></i> React JS</span>
                 <span class="tech-item"><i class="fab fa-node-js"></i> Node.js</span>
+                <span class="tech-item"><i class="fas fa-database"></i> Firebase</span>
                 <span class="tech-item"><i class="fab fa-wordpress"></i> WordPress Custom</span>
-                <span class="tech-item"><i class="fab fa-php"></i> Laravel / PHP</span>
+                <span class="tech-item"><i class="fab fa-php"></i> Laravel</span>
                 <span class="tech-item"><i class="fab fa-figma"></i> UI/UX Design</span>
             </div>
         </div>
     </section>
 
+    <!-- Prețuri & Pachete cu 4 tab-uri -->
     <section id="pachete" class="menu-section">
         <div class="section-title reveal-up">
-            <h2>Servicii & Prețuri</h2>
-            <p>Soluții complete de la design la implementare backend, fără costuri ascunse.</p>
+            <h2>Pachete & Soluții Web</h2>
+            <p>Prețuri transparente. Livrăm rapid, fără costuri ascunse.</p>
         </div>
         
-        <div class="tabs-header reveal-up">
-            <button class="tab-btn active" onclick="switchTab('tab-prezentare', this)">Site-uri Web & Landing</button>
-            <button class="tab-btn" onclick="switchTab('tab-ecommerce', this)">Magazine Online E-Commerce</button>
+        <div class="tabs-header reveal-up" style="flex-wrap: wrap; justify-content: center;">
+            <button class="tab-btn active" onclick="switchTab('tab-prezentare', this)">Site-uri de Prezentare</button>
+            <button class="tab-btn" onclick="switchTab('tab-ecommerce', this)">Magazine Online (E-Commerce)</button>
+            <button class="tab-btn" onclick="switchTab('tab-custom', this)">Soluții Custom & Corporate</button>
+            <button class="tab-btn" onclick="switchTab('tab-mentenanta', this)">Mentenanță & Urgențe</button>
         </div>
 
         <div class="tab-content active" id="tab-prezentare">
@@ -107,25 +125,31 @@
         <div class="tab-content" id="tab-ecommerce">
             <div class="menu-grid" id="menu-grid-ecommerce"></div>
         </div>
+        <div class="tab-content" id="tab-custom">
+            <div class="menu-grid" id="menu-grid-custom"></div>
+        </div>
+        <div class="tab-content" id="tab-mentenanta">
+            <div class="menu-grid" id="menu-grid-mentenanta"></div>
+        </div>
     </section>
 
     <section id="faq" class="faq-section reveal-up">
         <div class="section-title">
             <h2>Întrebări Frecvente</h2>
-            <p>Transparența este fundația colaborărilor noastre pe termen lung.</p>
+            <p>Claritatea și transparența ne definesc modul de lucru.</p>
         </div>
         <div class="faq-container">
             <div class="faq-item" onclick="this.classList.toggle('active')">
-                <div class="faq-question">Oferiți mentenanță și suport tehnic după lansare? <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer"><br>Da! Oferim o lună de garanție și suport gratuit. Ulterior, propunem abonamente de mentenanță care acoperă securitatea, actualizările și monitorizarea uptime-ului.</div>
+                <div class="faq-question">Cât costă mai exact un site web? <i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer"><br>Fiecare afacere este unică. Un site de prezentare complet optimizat pornește de obicei de la prețul afișat în pachetul Starter, iar un magazin online variază în funcție de numărul de produse și integrările dorite. Cere o ofertă gratuită pentru a primi o estimare exactă în 24h.</div>
             </div>
             <div class="faq-item" onclick="this.classList.toggle('active')">
                 <div class="faq-question">Cum se desfășoară procesul de plată? <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer"><br>Pentru siguranța ambelor părți, facturăm un avans de 50% înainte de începerea propriu-zisă a lucrărilor, iar restul de 50% se achită la predarea proiectului perfect funcțional.</div>
+                <div class="faq-answer"><br>Pentru siguranța ambelor părți și dedicarea echipei noastre, facturăm un avans de 50% înainte de începerea propriu-zisă a lucrărilor (pe bază de contract semnat), iar restul de 50% se achită doar la predarea proiectului complet funcțional și aprobat de tine.</div>
             </div>
             <div class="faq-item" onclick="this.classList.toggle('active')">
-                <div class="faq-question">Cât durează dezvoltarea unui site? <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer"><br>Un site de prezentare este lansat de obicei în 7-14 zile. Un magazin online e-commerce complex necesită între 3 și 5 săptămâni pentru integrări, import de produse și teste.</div>
+                <div class="faq-question">Cât durează dezvoltarea și lansarea? <i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer"><br>Ne mișcăm rapid. Un site de prezentare este gata, testat și lansat de obicei în 7-14 zile. Pentru platforme e-commerce sau aplicații customizate mai complexe, termenul poate varia între 3 și 6 săptămâni.</div>
             </div>
         </div>
     </section>
@@ -134,61 +158,51 @@
         <div class="footer-container reveal-up">
             <div class="footer-col">
                 <h2 class="logo" style="margin-bottom:15px;">NEXORA.</h2>
-                <p>Arhitecți digitali pentru afaceri care refuză mediocritatea.</p>
+                <p>Arhitecți digitali pentru afacerile care refuză mediocritatea online.</p>
             </div>
             <div class="footer-col">
-                <h3>Contact Echipă</h3>
+                <h3>Contact & Echipă</h3>
                 <p><i class="fas fa-globe" style="color:var(--accent-blue); width:25px;"></i> România, Remote 100%</p>
                 <p><i class="fas fa-phone-alt" style="color:var(--accent-blue); width:25px;"></i> 0700 000 000</p>
-                <p><i class="fas fa-envelope" style="color:var(--accent-blue); width:25px;"></i> contact@nexora.ro</p>
+                <p><i class="fas fa-envelope" style="color:var(--accent-blue); width:25px;"></i> office@nexora.ro</p>
             </div>
             <div class="footer-col">
-                <h3>Vrei un Audit Gratuit?</h3>
-                <p>Află în 24h ce poți îmbunătăți la site-ul tău: viteză, SEO, conversii.</p>
+                <h3>Solicită un Audit Web Gratuit</h3>
+                <p>Află în max 24h ce poți îmbunătăți la site-ul tău actual: viteză, scor SEO sau conversii.</p>
                 <form id="footer-form" class="footer-form">
-                    <input type="text" id="foot-name" placeholder="Numele sau compania ta" required>
-                    <input type="email" id="foot-email" placeholder="Adresă E-mail" required>
-                    <button type="submit" class="btn-primary" style="width: 100%; margin-top:5px;">Solicită Audit</button>
+                    <input type="text" id="foot-name" placeholder="Numele tău / Compania" required>
+                    <input type="email" id="foot-email" placeholder="Adresa de E-mail" required>
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-top:5px;">Vreau Auditul Gratuit</button>
                 </form>
             </div>
         </div>
     </footer>
 
-    <!-- Chatbot Adaptat pentru Agenție -->
-    <div class="chatbot-widget" id="chatbot-widget">
-        <div class="chat-header" id="chat-toggle">
-            <span><i class="fas fa-headset"></i> Consultant Digital AI</span><i class="fas fa-chevron-up" id="chat-icon"></i>
-        </div>
-        <div class="chat-body">
-            <div class="chat-logs" id="chat-logs"><div class="msg bot">Salut! Sunt consultantul agenției Nexora. Te pot ajuta să alegi platforma corectă pentru business-ul tău. Ce domeniu de activitate ai?</div></div>
-            <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Scrie mesajul tău..."><button id="chat-send"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Formular Direct de Ofertă (Înlocuiește complet coșul) -->
+    <!-- Formular Direct de Ofertă (Ultra-Scurt, Fără AI, Fără Metode de plată) -->
     <div class="popup-overlay" id="checkout-modal">
-        <div class="popup-box">
+        <div class="popup-box" style="max-width: 450px;">
             <button class="close-popup" onclick="document.getElementById('checkout-modal').classList.remove('show')">&times;</button>
-            <h2 style="margin-bottom: 25px; text-align: center;" class="gradient-text">Hai să discutăm</h2>
-            <p style="text-align: center; color: var(--text-muted); margin-bottom:20px; font-size: 0.9rem;">Completează detaliile și un expert din echipa noastră te va contacta în 24h.</p>
+            <h2 style="margin-bottom: 20px; text-align: center;" class="gradient-text">Hai să discutăm</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom:25px; font-size: 0.95rem;">Un expert Nexora te va contacta telefonic sau pe email în max 24h.</p>
+            
             <form id="checkout-form">
-                <div class="form-group" style="margin-bottom: 15px;"><input type="text" id="order-name" required placeholder="Companie / Numele tău complet" style="width: 100%; padding: 14px; border-radius: 8px;"></div>
-                <div class="form-group" style="margin-bottom: 15px;"><input type="tel" id="order-phone" required placeholder="Telefon de contact (07XX XXX XXX)" style="width: 100%; padding: 14px; border-radius: 8px;"></div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="text" id="order-name" required placeholder="Companie / Numele tău complet" style="width: 100%; padding: 14px; border-radius: 8px;">
+                </div>
                 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <textarea id="order-address" required placeholder="Descrie-ne pe scurt ideea ta de proiect (Ex: Am nevoie de un magazin online cu aproximativ 100 de produse...)" rows="3" style="width: 100%; padding: 14px; border-radius: 8px; resize: none;"></textarea>
+                    <input type="text" id="order-phone" required placeholder="Telefon sau Adresă E-mail" style="width: 100%; padding: 14px; border-radius: 8px;">
                 </div>
                 
-                <div class="form-group" style="margin-bottom: 25px;">
-                    <textarea id="order-notes" placeholder="Pachet vizat / Detalii (Opțional)" rows="1" style="width: 100%; padding: 14px; border-radius: 8px; resize: none;"></textarea>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <textarea id="order-address" required placeholder="Descrie pe scurt ce ai nevoie (Ex: Vreau un site de prezentare pentru un cabinet medical...)" rows="4" style="width: 100%; padding: 14px; border-radius: 8px; resize: none;"></textarea>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 25px; display: none;">
+                    <input type="text" id="order-notes" placeholder="Sistem - Pachet ascuns" style="width: 100%;">
                 </div>
 
-                <!-- Câmpuri ascunse păstrate pentru compatibilitatea cu scrierea în Firebase -->
-                <input type="hidden" id="order-payment" value="Factură/Transfer">
-
-                <button type="submit" class="btn-primary" id="btn-submit-order" style="width: 100%; padding: 16px; font-size:1.1rem;">Trimite Cererea</button>
+                <button type="submit" class="btn-primary" id="btn-submit-order" style="width: 100%; padding: 16px; font-size:1.1rem; border-radius:12px;">Trimite și te sunăm</button>
             </form>
         </div>
     </div>
@@ -225,37 +239,55 @@
         db.collection('products').where('active', '==', true).onSnapshot(snapshot => {
             const gridPrezentare = document.getElementById('menu-grid-prezentare');
             const gridEcommerce = document.getElementById('menu-grid-ecommerce');
-            if(!gridPrezentare || !gridEcommerce) return;
-
-            gridPrezentare.innerHTML = ''; gridEcommerce.innerHTML = '';
+            const gridCustom = document.getElementById('menu-grid-custom');
+            const gridMentenanta = document.getElementById('menu-grid-mentenanta');
+            
+            if(gridPrezentare) gridPrezentare.innerHTML = ''; 
+            if(gridEcommerce) gridEcommerce.innerHTML = '';
+            if(gridCustom) gridCustom.innerHTML = '';
+            if(gridMentenanta) gridMentenanta.innerHTML = '';
 
             snapshot.forEach(doc => {
-                const p = doc.data(); p.id = doc.id;
+                const p = doc.data(); 
                 
-                const hasDiscount = parseFloat(p.discountPercent) > 0;
-                const priceDisplay = hasDiscount ? `<s style="color:var(--text-muted); font-size:1.2rem; font-weight:400; margin-right:8px;">${parseFloat(p.originalPrice).toFixed(0)}€</s> <span class="price" style="color:var(--accent-blue); display:inline;">${p.price.toFixed(0)}€</span>` : `<span class="price">${p.price.toFixed(0)}€</span>`;
+                let btnText = "Cere ofertă exactă";
+                let displayPrice = "";
                 
+                // Setăm prețul de afișare bazat pe categoria pachetului (Trater style)
+                if(p.category === 'custom') {
+                    displayPrice = `<span class="price" style="font-size:1.8rem; margin-bottom:15px; display:block;">Pe bază de proiect</span>`;
+                    btnText = "Programează Consultanță";
+                } else if(p.category === 'mentenanta') {
+                    displayPrice = `<span class="price" style="font-size:2rem; margin-bottom:15px; display:block;">de la ${p.price} Lei/lună</span>`;
+                    btnText = "Solicită Suport";
+                } else {
+                    displayPrice = `<span style="font-size:1.1rem; color:var(--text-muted); display:block; margin-bottom:5px;">Preț de la</span><span class="price" style="font-size:2.2rem; margin-bottom:20px; display:block; font-weight:800;">${p.price} Lei</span>`;
+                }
+
+                // Generare listă de bife din descriere (transformăm textul cu ✔️ în listă stilizată)
+                let formattedDesc = p.description.replace(/✔️/g, '<li style="margin-bottom:10px; display:flex; gap:10px; align-items:flex-start;"><i class="fas fa-check" style="color:var(--success); margin-top:4px;"></i> <span>').replace(/<br>/g, '</span></li>');
+                if(formattedDesc.includes('<li')) formattedDesc = `<ul style="list-style:none; padding:0; margin-bottom:30px; color:var(--text-main); font-size:0.95rem;">${formattedDesc}</span></li></ul>`;
+
                 const cardHTML = `
                 <div class="menu-card reveal-up">
-                    <div class="card-info">
-                        ${p.badge ? `<span class="hero-badge" style="margin-bottom:15px; display:inline-block; font-size:0.75rem;">${p.badge}</span>` : ''}
-                        <h3>${p.name}</h3>
-                        <div>${priceDisplay}</div>
-                        <p style="margin-bottom: 25px;">${p.description}</p>
-                        <div class="card-bottom">
-                            <!-- Butonul deschide modalul de contact și precompletează pachetul vizat -->
-                            <button onclick="openModal('${p.name}', ${p.price})" class="btn-primary" style="width:100%;">Alege Pachetul <i class="fas fa-arrow-right" style="margin-left:8px; font-size:0.9rem;"></i></button>
+                    <div class="card-info" style="height:100%; display:flex; flex-direction:column;">
+                        ${p.badge ? `<span class="hero-badge" style="margin-bottom:20px; display:inline-block; font-size:0.75rem;">${p.badge}</span>` : ''}
+                        <h3 style="font-size: 1.6rem; color:white; margin-bottom:15px;">${p.name}</h3>
+                        ${displayPrice}
+                        ${formattedDesc}
+                        <div class="card-bottom" style="margin-top:auto;">
+                            <button onclick="openModal('${p.name}', ${p.price})" class="btn-primary" style="width:100%; border-radius:8px;">${btnText}</button>
                         </div>
                     </div>
                 </div>`;
                 
-                if (p.category === 'ecommerce') gridEcommerce.insertAdjacentHTML('beforeend', cardHTML);
-                else gridPrezentare.insertAdjacentHTML('beforeend', cardHTML);
+                if (p.category === 'ecommerce' && gridEcommerce) gridEcommerce.insertAdjacentHTML('beforeend', cardHTML);
+                else if (p.category === 'custom' && gridCustom) gridCustom.insertAdjacentHTML('beforeend', cardHTML);
+                else if (p.category === 'mentenanta' && gridMentenanta) gridMentenanta.insertAdjacentHTML('beforeend', cardHTML);
+                else if (gridPrezentare) gridPrezentare.insertAdjacentHTML('beforeend', cardHTML);
             });
 
-            setTimeout(() => {
-                document.querySelectorAll('.menu-card.reveal-up').forEach(el => observer.observe(el));
-            }, 100);
+            setTimeout(() => { document.querySelectorAll('.menu-card.reveal-up').forEach(el => observer.observe(el)); }, 100);
         });
     </script>
 </body>
