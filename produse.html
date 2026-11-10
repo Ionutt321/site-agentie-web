@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebStudio | Pachete Web Complete</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="padding-top: 80px;">
+    
+    <nav class="navbar scrolled" id="main-nav" style="background: rgba(15, 23, 42, 1);">
+        <a href="index.html" class="logo">WebStudio</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Acasă</a></li>
+            <li><a href="produse.html" class="active">Pachete Web</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="tel:0700000000" class="nav-btn call-btn"><i class="fas fa-phone"></i> 0700 000 000</a>
+            <button id="cart-icon-btn" class="nav-btn cart-btn"><i class="fas fa-shopping-bag"></i> <span id="cart-count">0</span></button>
+        </div>
+    </nav>
+
+    <section class="menu-section">
+        <div class="tabs-header">
+            <button class="tab-btn active" onclick="switchTab('tab-prezentare', this)"><i class="fas fa-laptop-code"></i> Site Prezentare</button>
+            <button class="tab-btn" onclick="switchTab('tab-ecommerce', this)"><i class="fas fa-shopping-cart"></i> Magazin Online</button>
+        </div>
+        <div class="tab-content active" id="tab-prezentare">
+            <div class="menu-grid" id="menu-grid-prezentare"><p style="text-align:center;">Se încarcă pachetele...</p></div>
+        </div>
+        <div class="tab-content" id="tab-ecommerce">
+            <div class="menu-grid" id="menu-grid-ecommerce"></div>
+        </div>
+    </section>
+
+    <!-- Sidebar Coș -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2 style="color:var(--dark);">Coș Servicii</h2>
+            <button id="close-cart" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#64748b;"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <div class="cart-footer">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; color:var(--dark);">
+                <span style="font-weight:600;">Total proiect:</span>
+                <span id="cart-total-price" style="font-size:1.5rem; font-weight:800;">0,00 lei</span>
+            </div>
+            <!-- Redirecționăm către prima pagină pentru finalizarea formularului -->
+            <button onclick="window.location.href='index.html'" class="btn-primary" style="width: 100%;">Finalizează Cererea</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyChCuAExNMLcxRoXTFVPElOJ9dynYgVGjA", authDomain: "pizeria-61550.firebaseapp.com", projectId: "pizeria-61550", storageBucket: "pizeria-61550.firebasestorage.app", messagingSenderId: "655046868435", appId: "1:655046868435:web:b9a0815d10e38e4f1dc326" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        window.dbProductsList = [];
+        window.storeIsOpen = true;
+
+        window.switchTab = function(tabId, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        };
+
+        // Am scos verificarea de program orar, agenția e deschisă mereu
+        window.storeIsOpen = true;
+
+        db.collection('products').where('active', '==', true).onSnapshot(snapshot => {
+            window.dbProductsList = [];
+            snapshot.forEach(doc => { let data = doc.data(); data.id = doc.id; window.dbProductsList.push(data); });
+            renderMenu();
+        });
+
+        window.renderMenu = function() {
+            const gridPrezentare = document.getElementById('menu-grid-prezentare');
+            const gridEcommerce = document.getElementById('menu-grid-ecommerce');
+            if(!gridPrezentare || !gridEcommerce) return;
+
+            gridPrezentare.innerHTML = ''; gridEcommerce.innerHTML = '';
+            let cart = JSON.parse(localStorage.getItem('divino_cart')) || [];
+
+            window.dbProductsList.forEach(p => {
+                const itemInCart = cart.find(i => i.id === p.id);
+                
+                const priceDisplay = (p.discountPercent > 0) 
+                    ? `<s style="color:#94a3b8; font-size:1rem;">${p.originalPrice.toFixed(2)}</s> <span style="color:var(--danger); font-size: 1.3rem; font-weight: 800;">${p.price.toFixed(2)} lei</span>` 
+                    : `<span style="font-size: 1.3rem; font-weight: 800; color: var(--dark);">${p.price.toFixed(2)} lei</span>`;
+                
+                let badgesArr = [];
+                // Am adaptat logica 1+1 într-un badge de ofertă specială (ex: "Domeniu Gratuit") dacă e bifat în Firebase
+                if (p.onePlusOne) badgesArr.push(`<span style="background:var(--danger); color:white; padding: 4px 10px; border-radius: 12px; font-size:0.75rem; font-weight:800;">Oferta Lunii</span>`);
+                if (p.badge) badgesArr.push(`<span style="background:white; color:var(--dark); padding: 4px 10px; border-radius: 12px; font-size:0.75rem; font-weight:800; box-shadow:0 2px 5px rgba(0,0,0,0.1);">${p.badge}</span>`);
+                const badgeHTML = badgesArr.length > 0 ? `<div style="position:absolute; top:10px; right:10px; display:flex; flex-direction:column; gap:6px;">${badgesArr.join('')}</div>` : '';
+
+                let actionButtons;
+                if (itemInCart) {
+                    actionButtons = `
+                        <div class="cart-controls-inline">
+                            <button onclick="decreaseQtyDB('${p.id}')" class="btn-qty">-</button>
+                            <span style="font-weight:800; width:20px; text-align:center; color:var(--dark);">${itemInCart.quantity}</span>
+                            <button onclick="addToCartDB('${p.id}', this)" class="btn-add"><i class="fas fa-plus"></i></button>
+                        </div>
+                    `;
+                } else {
+                    actionButtons = `
+                        <button onclick="addToCartDB('${p.id}', this)" class="btn-add"><i class="fas fa-plus"></i></button>
+                    `;
+                }
+
+                const cardHTML = `
+                    <div class="menu-card">
+                        <div class="card-img">
+                            <!-- Poză placeholder de tehnologie/laptop -->
+                            <img src="${p.image || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085'}" alt="${p.name}">
+                            ${badgeHTML}
+                        </div>
+                        <div class="card-info">
+                            <div>
+                                <h3>${p.name}</h3>
+                                <p>${p.description}</p>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 15px;">
+                                <div>${priceDisplay}</div>
+                                ${actionButtons}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                if (p.category === 'ecommerce') gridEcommerce.insertAdjacentHTML('beforeend', cardHTML);
+                else gridPrezentare.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        };
+    </script>
+</body>
+</html>

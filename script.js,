@@ -1,0 +1,470 @@
+document.addEventListener("DOMContentLoaded", () => {
+    
+    const navbar = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+        if (navbar) {
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        }
+    });
+
+    const chatWidget = document.getElementById('chatbot-widget');
+    const chatHeader = document.getElementById('chat-toggle');
+    const chatIcon = document.getElementById('chat-icon');
+    if (chatHeader && chatWidget) {
+        chatHeader.addEventListener('click', () => {
+            chatWidget.classList.toggle('open');
+            chatIcon.classList.toggle('fa-chevron-down');
+            chatIcon.classList.toggle('fa-chevron-up');
+        });
+    }
+
+    const chatInput = document.getElementById('chat-input');
+    const chatSendBtn = document.getElementById('chat-send');
+    const chatLogs = document.getElementById('chat-logs');
+    let messageHistory = []; 
+
+    function findProductInDB(rawName) {
+        if (!window.dbProductsList || window.dbProductsList.length === 0) return null;
+        const clean = rawName.trim().toLowerCase();
+        
+        let found = window.dbProductsList.find(p => p.name.trim().toLowerCase() === clean);
+        if (found) return found;
+
+        found = window.dbProductsList.find(p => {
+            const pName = p.name.trim().toLowerCase();
+            return pName.includes(clean) || clean.includes(pName);
+        });
+        if (found) return found;
+
+        const words = clean.split(/\s+/).filter(w => w.length > 2);
+        found = window.dbProductsList.find(p => {
+            const pName = p.name.trim().toLowerCase();
+            return words.some(w => pName.includes(w));
+        });
+        return found || null;
+    }
+
+    async function sendChatMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+        
+        chatLogs.innerHTML += `<div class="msg user">${text}</div>`;
+        chatInput.value = '';
+        chatLogs.scrollTop = chatLogs.scrollHeight; 
+        messageHistory.push({ role: "user", content: text });
+
+        const loadingId = 'load-' + Date.now();
+        chatLogs.innerHTML += `<div id="${loadingId}" class="msg bot" style="color:#64748b;"><i class="fas fa-ellipsis-h fa-fade"></i> Se procesează...</div>`;
+        chatLogs.scrollTop = chatLogs.scrollHeight;
+
+        try {
+            const availableProducts = (window.dbProductsList || []).map(p => {
+                let details = `${p.name}`;
+                const hasDiscount = parseFloat(p.discountPercent) > 0;
+                if (hasDiscount) {
+                    details += ` - Preț promoțional: ${p.price.toFixed(2)} lei (Reducere: ${p.discountPercent}%)`;
+                } else {
+                    details += ` - Preț: ${p.price.toFixed(2)} lei`;
+                }
+                return details;
+            }).join('\n');
+
+            const storeRules = `Reguli agenție: Nu există comandă minimă sau taxe de transport. Proiectele se achită cu un avans de 50%, restul la predare. Timp mediu de execuție: 7-14 zile.`;
+
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    messages: messageHistory,
+                    currentMenu: availableProducts,
+                    storeRules: storeRules
+                })
+            });
+            const data = await response.json();
+            document.getElementById(loadingId).remove();
+            
+            if (data.reply) {
+                let botReply = data.reply;
+                let cart = JSON.parse(localStorage.getItem('divino_cart')) || [];
+                let cartModified = false;
+
+                const cmdRegex = /\[(ADAUGA|SCADE|STERGE|ELIMINA):\s*([^,\]]+?)(?:,\s*(\d+))?\]/gi;
+                let match;
+
+                while ((match = cmdRegex.exec(botReply)) !== null) {
+                    const action = match[1].toUpperCase();
+                    const itemName = match[2].trim();
+                    const qty = match[3] ? parseInt(match[3], 10) : 1;
+                    
+                    const product = findProductInDB(itemName);
+                    if (product) {
+                        const itemIndex = cart.findIndex(i => i.id === product.id);
+                        
+                        if (action === 'ADAUGA') {
+                            if (itemIndex > -1) {
+                                cart[itemIndex].quantity += qty;
+                            } else {
+                                cart.push({ id: product.id, quantity: qty });
+                            }
+                            cartModified = true;
+
+                            if (typeof gtag === 'function') {
+                                gtag('event', 'add_to_cart', {
+                                    currency: 'RON',
+                                    value: product.price * qty,
+                                    items: [{ item_id: product.id, item_name: product.name, price: product.price, quantity: qty }]
+                                });
+                            }
+                        } else if (action === 'SCADE') {
+                            if (itemIndex > -1) {
+                                cart[itemIndex].quantity -= qty;
+                                if (cart[itemIndex].quantity <= 0) cart.splice(itemIndex, 1);
+                                cartModified = true;
+                            }
+                        } else if (action === 'STERGE' || action === 'ELIMINA') {
+                            if (itemIndex > -1) {
+                                cart.splice(itemIndex, 1);
+                                cartModified = true;
+                            }
+                        }
+                    }
+                }
+
+                if (cartModified) {
+                    localStorage.setItem('divino_cart', JSON.stringify(cart));
+                    window.dispatchEvent(new Event('cartUpdated'));
+                }
+
+                botReply = botReply.replace(cmdRegex, '').trim().replace(/\n/g, '<br>');
+
+                chatLogs.innerHTML += `<div class="msg bot">${botReply}</div>`;
+                messageHistory.push({ role: "assistant", content: botReply }); 
+            } else {
+                chatLogs.innerHTML += `<div class="msg bot" style="color:red;">Eroare de la asistent. Reîncearcă!</div>`;
+            }
+            chatLogs.scrollTop = chatLogs.scrollHeight;
+        } catch (err) {
+            document.getElementById(loadingId).remove();
+            chatLogs.innerHTML += `<div class="msg bot" style="color:red;">Eroare de conexiune.</div>`;
+            chatLogs.scrollTop = chatLogs.scrollHeight;
+        }
+    }
+    
+    if (chatSendBtn) chatSendBtn.addEventListener('click', sendChatMessage);
+    if (chatInput) chatInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendChatMessage(); });
+
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const btnOpenCart = document.getElementById('cart-icon-btn');
+    const btnCloseCart = document.getElementById('close-cart');
+    
+    if (btnOpenCart) btnOpenCart.addEventListener('click', () => { cartSidebar.classList.add('active'); cartOverlay.classList.add('active'); });
+    if (btnCloseCart) btnCloseCart.addEventListener('click', () => { cartSidebar.classList.remove('active'); cartOverlay.classList.remove('active'); });
+    if (cartOverlay) cartOverlay.addEventListener('click', () => { cartSidebar.classList.remove('active'); cartOverlay.classList.remove('active'); });
+
+    window.validateCart = function() {
+        let cart = JSON.parse(localStorage.getItem('divino_cart')) || [];
+        let validCart = [];
+        let changed = false;
+        if (window.dbProductsList && window.dbProductsList.length > 0) {
+            cart.forEach(item => {
+                const exists = window.dbProductsList.find(p => p.id === item.id);
+                if (exists) validCart.push(item);
+                else changed = true;
+            });
+            if (changed) localStorage.setItem('divino_cart', JSON.stringify(validCart));
+        }
+    };
+
+    window.changeQtyDB = function(id, change) {
+        let cart = JSON.parse(localStorage.getItem('divino_cart')) || [];
+        const index = cart.findIndex(i => i.id === id);
+        if (index !== -1) {
+            cart[index].quantity += change;
+            if (cart[index].quantity <= 0) cart.splice(index, 1);
+            localStorage.setItem('divino_cart', JSON.stringify(cart));
+            window.dispatchEvent(new Event('cartUpdated')); 
+        }
+    };
+
+    window.addToCartDB = function(id, name, price, is1plus1, btnElement) {
+        let cart = JSON.parse(localStorage.getItem('divino_cart')) || [];
+        let existingItem = cart.find(i => i.id === id);
+        if(existingItem) existingItem.quantity += 1;
+        else cart.push({ id: id, quantity: 1 }); 
+        
+        localStorage.setItem('divino_cart', JSON.stringify(cart));
+
+        if (typeof gtag === 'function') {
+            gtag('event', 'add_to_cart', {
+                currency: 'RON', value: price,
+                items: [{ item_id: id, item_name: name, price: price, quantity: 1 }]
+            });
+        }
+        
+        if (btnElement) {
+            btnElement.classList.add('spin-green');
+            btnElement.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => { window.dispatchEvent(new Event('cartUpdated')); }, 600);
+        } else {
+            window.dispatchEvent(new Event('cartUpdated'));
+        }
+
+        const cartIcon = document.getElementById('cart-icon-btn');
+        if (cartIcon) {
+            cartIcon.style.transform = 'scale(1.2)';
+            setTimeout(() => cartIcon.style.transform = 'scale(1)', 200);
+        }
+    };
+
+    window.syncMenuButtons = function() {
+        let cart = JSON.parse(localStorage.getItem('divino_cart')) || [];
+        if (window.dbProductsList) {
+            window.dbProductsList.forEach(p => {
+                const btnContainer = document.getElementById(`action-btn-${p.id}`);
+                if (btnContainer) {
+                    const itemInCart = cart.find(i => i.id === p.id);
+                    if (itemInCart) {
+                        btnContainer.innerHTML = `
+                            <div class="cart-controls-inline">
+                                <button onclick="changeQtyDB('${p.id}', -1)" class="btn-qty">-</button>
+                                <span class="inline-qty">${itemInCart.quantity}</span>
+                                <button onclick="changeQtyDB('${p.id}', 1)" class="btn-qty">+</button>
+                            </div>
+                        `;
+                    } else {
+                        btnContainer.innerHTML = `
+                            <button onclick="addToCartDB('${p.id}', '${p.name}', ${p.price}, '${p.onePlusOne}', this)" class="btn-add">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        `;
+                    }
+                }
+            });
+        }
+    };
+
+    window.updateCartUI = function() {
+        let cart = JSON.parse(localStorage.getItem('divino_cart')) || [];
+        const container = document.getElementById('cart-items');
+        let totalItems = 0; let subtotalOriginal = 0; let subtotalDiscounted = 0; 
+        
+        if (container) {
+            container.innerHTML = '';
+            if (cart.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:50px 20px;"><i class="fas fa-laptop-code" style="font-size:3.5rem; color:#cbd5e1; margin-bottom:20px;"></i><p style="color:#64748b; font-weight:600;">Nu ai ales niciun pachet web.</p></div>';
+            } else {
+                cart.forEach((item) => {
+                    const dbItem = window.dbProductsList ? window.dbProductsList.find(p => p.id === item.id) : null;
+                    if (dbItem) {
+                        totalItems += item.quantity;
+                        const itemPrice = dbItem.price;
+                        const itemOriginalPrice = dbItem.originalPrice || dbItem.price;
+                        
+                        subtotalOriginal += (itemOriginalPrice * item.quantity);
+                        subtotalDiscounted += (itemPrice * item.quantity);
+                        
+                        const hasDiscount = itemOriginalPrice > itemPrice;
+                        const priceHTML = hasDiscount 
+                            ? `<s style="color:#94a3b8; font-size:0.9rem; margin-right:5px;">${(itemOriginalPrice * item.quantity).toFixed(2)}</s> <span style="color:var(--danger); font-weight:800;">${(itemPrice * item.quantity).toFixed(2)} lei</span>`
+                            : `<span style="color:var(--primary); font-weight:800;">${(itemPrice * item.quantity).toFixed(2)} lei</span>`;
+
+                        container.innerHTML += `
+                            <div class="cart-item">
+                                <div style="flex:1;">
+                                    <h4>${dbItem.name}</h4><div style="font-family:'Cinzel', serif; font-size:1.1rem; margin-top:3px;">${priceHTML}</div>
+                                </div>
+                                <div class="cart-controls">
+                                    <button onclick="changeQtyDB('${item.id}', -1)">-</button><span style="font-weight:800; width:22px; text-align:center;">${item.quantity}</span><button onclick="changeQtyDB('${item.id}', 1)">+</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+        }
+        
+        const productSavings = subtotalOriginal - subtotalDiscounted;
+        window.currentOrderTotal = subtotalDiscounted;
+        
+        const countEl = document.getElementById('cart-count'); if (countEl) countEl.textContent = totalItems;
+        
+        const totalsContainer = document.getElementById('cart-totals-area');
+        if (totalsContainer) {
+            if (subtotalDiscounted > 0) {
+                totalsContainer.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.95rem; color:#64748b;"><span>Subtotal:</span><span>${subtotalOriginal.toFixed(2)} lei</span></div>
+                    ${productSavings > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:10px; font-size:0.95rem; color:var(--success); font-weight:bold;"><span>Reducere aplicată:</span><span>-${productSavings.toFixed(2)} lei</span></div>` : '<div style="border-bottom:1px solid var(--border); margin-bottom:15px;"></div>'}
+                    <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-weight:700; font-size:1.1rem; color:var(--dark);">Total proiect:</span><span style="font-size:1.8rem; font-weight:800; font-family:'Cinzel', serif; color:var(--dark);">${subtotalDiscounted.toFixed(2)} lei</span></div>
+                `;
+            } else { totalsContainer.innerHTML = ''; }
+        }
+
+        const checkoutBtn = document.getElementById('checkout-btn');
+        if (checkoutBtn) {
+            if (subtotalDiscounted === 0) {
+                checkoutBtn.disabled = true; checkoutBtn.style.opacity = '0.5'; checkoutBtn.textContent = 'Finalizează Cererea';
+            } else {
+                checkoutBtn.disabled = false; checkoutBtn.style.opacity = '1'; checkoutBtn.textContent = 'Finalizează Cererea';
+            }
+        }
+    };
+
+    window.addEventListener('cartUpdated', () => { 
+        if (typeof validateCart === 'function') validateCart();
+        if (typeof updateCartUI === 'function') updateCartUI(); 
+        if (typeof syncMenuButtons === 'function') syncMenuButtons();
+    });
+    
+    updateCartUI();
+
+    const popup = document.getElementById('newsletter-popup');
+    const closePopupBtn = document.getElementById('close-popup');
+    if (closePopupBtn) { closePopupBtn.addEventListener('click', (e) => { e.preventDefault(); popup.classList.remove('show'); localStorage.setItem('newsletter_shown', 'true'); }); }
+
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const checkoutModal = document.getElementById('checkout-modal');
+    const closeCheckoutBtn = document.getElementById('close-checkout');
+    
+    if (checkoutBtn && checkoutModal) {
+        checkoutBtn.addEventListener('click', () => {
+            if (!checkoutBtn.disabled) { 
+                document.getElementById('cart-sidebar').classList.remove('active'); 
+                checkoutModal.classList.add('show'); 
+                
+                if (typeof gtag === 'function') {
+                    let cart = JSON.parse(localStorage.getItem('divino_cart')) || [];
+                    let items = cart.map(i => {
+                        const dbItem = window.dbProductsList ? window.dbProductsList.find(p => p.id === i.id) : null;
+                        return { item_id: i.id, item_name: dbItem ? dbItem.name : i.id, price: dbItem ? dbItem.price : 0, quantity: i.quantity };
+                    });
+                    gtag('event', 'begin_checkout', { currency: 'RON', value: window.currentOrderTotal || 0, items: items });
+                }
+            }
+        });
+    }
+    
+    if (closeCheckoutBtn) {
+        closeCheckoutBtn.addEventListener('click', (e) => { e.preventDefault(); checkoutModal.classList.remove('show'); document.getElementById('cart-sidebar').classList.add('active'); });
+    }
+
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('btn-submit-order');
+            submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite cererea...';
+
+            let cart = JSON.parse(localStorage.getItem('divino_cart')) || [];
+            let orderItems = []; let gaItems = [];
+
+            cart.forEach(item => {
+                const dbItem = window.dbProductsList.find(p => p.id === item.id);
+                if (dbItem) { 
+                    orderItems.push({ id: dbItem.id, name: dbItem.name, price: dbItem.price, quantity: item.quantity }); 
+                    gaItems.push({ item_id: dbItem.id, item_name: dbItem.name, price: dbItem.price, quantity: item.quantity });
+                }
+            });
+
+            const finalTotal = window.currentOrderTotal || 0;
+            const orderData = {
+                customerName: document.getElementById('order-name').value.trim(),
+                customerPhone: document.getElementById('order-phone').value.trim(),
+                orderType: 'digital_service',
+                projectDescription: document.getElementById('order-address').value.trim(), // fostul câmp de adresă
+                paymentMethod: document.getElementById('order-payment').value,
+                domainStatus: document.getElementById('order-notes').value.trim(),
+                items: orderItems,
+                totalPrice: finalTotal,
+                status: 'lead_nou', 
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                const docRef = await db.collection('orders').add(orderData);
+
+                if (typeof gtag === 'function') {
+                    gtag('event', 'purchase', { transaction_id: docRef.id, value: finalTotal, currency: 'RON', tax: 0, shipping: 0, items: gaItems });
+                }
+
+                localStorage.removeItem('divino_cart');
+                window.dispatchEvent(new Event('cartUpdated'));
+                
+                checkoutForm.innerHTML = `
+                    <div style="text-align:center; padding: 20px 0;">
+                        <i class="fas fa-check-circle" style="font-size:4rem; color:var(--success); margin-bottom:15px;"></i>
+                        <h2 style="color:var(--dark);">Proiectul a fost înregistrat!</h2>
+                        <p style="color:#64748b; margin-top:10px;">Îți mulțumim pentru încredere. Te vom contacta în scurt timp pentru a stabili toate detaliile arhitecturii web.</p>
+                        <button type="button" onclick="document.getElementById('checkout-modal').classList.remove('show');" class="btn-primary" style="margin-top:20px; border-radius:12px; padding:12px 30px;">Închide</button>
+                    </div>
+                `;
+            } catch (error) {
+                console.error("Eroare la trimiterea proiectului:", error);
+                submitBtn.disabled = false; submitBtn.innerHTML = 'Eroare. Reîncearcă!';
+            }
+        });
+    }
+
+    async function submitNewsletter(form, nume, phone, email) {
+        const btn = form.querySelector('button'); 
+        btn.disabled = true; 
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se verifică...';
+        
+        const cleanPhone = phone.trim();
+        const cleanEmail = email.trim().toLowerCase();
+
+        try {
+            const phoneCheck = await db.collection('subscribers').where('phone', '==', cleanPhone).get();
+            const emailCheck = await db.collection('subscribers').where('email', '==', cleanEmail).get();
+
+            if (!phoneCheck.empty || !emailCheck.empty) {
+                alert("Acest număr de telefon sau email a fost deja înregistrat.");
+                btn.disabled = false; btn.textContent = 'Abonează-te';
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
+
+            await db.collection('subscribers').doc(cleanPhone).set({ 
+                name: nume ? nume.trim() : 'Anonim', phone: cleanPhone, email: cleanEmail, gdprAccepted: true, subscribedAt: firebase.firestore.FieldValue.serverTimestamp() 
+            });
+
+            const clientName = nume ? nume.trim() : 'prietene';
+            const welcomeSubject = "Bun venit la WebStudio! Ai o reducere specială 🚀";
+            const welcomeBody = `Salut, ${clientName}!\n\nÎți mulțumim că te-ai abonat la noutățile noastre!\n\nAșa cum am promis, iată codul tău de REDUCERE pentru primul tău site sau magazin online:\n\n👉 COD: WEBSTUDIO10 👈\n\nMenționează acest cod consultantului nostru atunci când te contactăm pentru proiectul tău.\n\nTe așteptăm cu drag să construim ceva grozav împreună!\nEchipa WebStudio`;
+
+            fetch('/api/send-newsletter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ subject: welcomeSubject, body: welcomeBody, emails: [cleanEmail] })
+            }).catch(err => console.error("Eroare mail:", err));
+
+            form.innerHTML = '<h3 style="color:#10b981; margin: 15px 0; text-align:center;"><i class="fas fa-check-circle"></i> Mulțumim!</h3>';
+            localStorage.setItem('newsletter_shown', 'true'); 
+            setTimeout(() => { const pop = document.getElementById('newsletter-popup'); if (pop) pop.classList.remove('show'); }, 3000);
+            
+        } catch(err) { 
+            console.error("Eroare abonare:", err);
+            btn.disabled = false; btn.textContent = 'Eroare. Reîncearcă!'; 
+        }
+    }
+
+    const popForm = document.getElementById('popup-form');
+    if(popForm) {
+        popForm.addEventListener('submit', (e) => { 
+            e.preventDefault(); 
+            if(!document.getElementById('pop-gdpr').checked) { alert("Te rugăm să accepți termenii GDPR."); return; }
+            submitNewsletter(e.target, document.getElementById('sub-name').value, document.getElementById('sub-phone').value, document.getElementById('sub-email').value); 
+        });
+    }
+
+    const footForm = document.getElementById('footer-form');
+    if(footForm) {
+        footForm.addEventListener('submit', (e) => { 
+            e.preventDefault(); 
+            if(!document.getElementById('foot-gdpr').checked) { alert("Te rugăm să accepți termenii GDPR."); return; }
+            submitNewsletter(e.target, document.getElementById('foot-name').value, document.getElementById('foot-phone').value, document.getElementById('foot-email').value); 
+        });
+    }
+});
