@@ -330,6 +330,7 @@
                 <p>Află în max 24h ce poți îmbunătăți la site-ul tău actual: viteză, scor SEO sau conversii.</p>
                 <form id="footer-form" class="footer-form">
                     <input type="text" id="foot-name" minlength="3" placeholder="Numele tău / Compania" required>
+                    <input type="tel" id="foot-phone" placeholder="Număr de telefon / WhatsApp (ex: +40... sau +44...)" required>
                     <input type="email" id="foot-email" placeholder="Adresa de E-mail" required>
                     <button type="submit" class="btn-primary" style="width: 100%; margin-top:5px;">Vreau Auditul Gratuit</button>
                 </form>
@@ -600,24 +601,28 @@
         if (footForm) {
             footForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                const footName = document.getElementById('foot-name').value.trim();
+                const footPhone = document.getElementById('foot-phone').value.trim();
+                const footEmail = document.getElementById('foot-email').value.trim();
+
+                if (footName.length < 3) {
+                    alert("Te rugăm să completezi un nume valid (minim 3 caractere).");
+                    return;
+                }
+
+                if (!valideazaDateContact(footPhone, footEmail)) {
+                    return;
+                }
+
                 const btn = footForm.querySelector('button');
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
 
-                const footName = document.getElementById('foot-name').value.trim();
-                const footEmail = document.getElementById('foot-email').value.trim();
-
-                const regexEmail = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
-                if (!regexEmail.test(footEmail)) {
-                    alert("Te rugăm să introduci o adresă de e-mail corectă.");
-                    btn.disabled = false;
-                    btn.innerHTML = 'Vreau Auditul Gratuit';
-                    return;
-                }
-
                 try {
                     await db.collection('subscribers').add({
                         name: footName,
+                        phone: footPhone,
                         email: footEmail,
                         type: 'solicitare_audit_gratuit',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -629,7 +634,8 @@
                         body: JSON.stringify({
                             tip: 'audit_footer',
                             nume: footName,
-                            contact: footEmail,
+                            telefon: footPhone,
+                            contact: footPhone,
                             email: footEmail
                         })
                     }).catch(err => console.warn('Telegram error:', err));
