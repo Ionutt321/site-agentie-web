@@ -592,7 +592,7 @@
             if (target) target.classList.add('active');
         };
 
-        // Încărcare dinamică produse (Existent)
+        // Încărcare dinamică produse (Sortate crescător după preț)
         db.collection('products').where('active', '==', true).onSnapshot(snapshot => {
             const gridPrezentare = document.getElementById('menu-grid-prezentare');
             const gridEcommerce = document.getElementById('menu-grid-ecommerce');
@@ -604,9 +604,15 @@
             if(gridCustom) gridCustom.innerHTML = '';
             if(gridMentenanta) gridMentenanta.innerHTML = '';
 
+            const productsList = [];
             snapshot.forEach(doc => {
-                const p = doc.data(); 
-                
+                productsList.push(doc.data());
+            });
+
+            // Ordonare crescătoare după preț (Starter -> Pro -> Corporate / Suport -> VIP)
+            productsList.sort((a, b) => (a.price || 0) - (b.price || 0));
+
+            productsList.forEach(p => {
                 let btnText = "Cere ofertă exactă";
                 let displayPrice = "";
                 
