@@ -377,6 +377,19 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
+                // Notificare automată Telegram prin endpoint-ul din api/notify.js
+                fetch('/api/notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nume: nameInput,
+                        telefon: phoneInput,
+                        industrie: quizLeadData.industrie,
+                        obiectiv: quizLeadData.obiectiv,
+                        functionalitati: quizLeadData.functionalitati
+                    })
+                }).catch(err => console.warn('Notificare Telegram eșuată:', err));
+
                 if (typeof gtag === 'function') {
                     gtag('event', 'generate_lead', { currency: 'RON', value: 200, lead_type: 'quiz_funnel' });
                 }
