@@ -38,7 +38,6 @@
 
     <section id="hero" class="hero">
         <div class="reveal-up">
-            <!-- Badge 100% real și axat pe valoare tehnică, fără rating fals -->
             <span class="hero-badge"><i class="fas fa-bolt" style="color: #60a5fa;"></i> Arhitectură Web Modernă | Livrare în 7-14 zile</span>
             <h1>CONSTRUIM ECOSISTEME DIGITALE<br><span class="gradient-text">CARE GENEREAZĂ CLIENȚI</span></h1>
             <p>Nu facem doar „site-uri frumoase”. Creăm platforme web ultra-rapide și magazine online cu arhitectură gândită pentru conversie și scalare B2B/B2C.</p>
@@ -171,7 +170,7 @@
                 <h3>Solicită un Audit Web Gratuit</h3>
                 <p>Află în max 24h ce poți îmbunătăți la site-ul tău actual: viteză, scor SEO sau conversii.</p>
                 <form id="footer-form" class="footer-form">
-                    <input type="text" id="foot-name" placeholder="Numele tău / Compania" required>
+                    <input type="text" id="foot-name" minlength="3" placeholder="Numele tău / Compania" required>
                     <input type="email" id="foot-email" placeholder="Adresa de E-mail" required>
                     <button type="submit" class="btn-primary" style="width: 100%; margin-top:5px;">Vreau Auditul Gratuit</button>
                 </form>
@@ -181,67 +180,48 @@
 
     <!-- Formular Popup Direct de Ofertă -->
     <div class="popup-overlay" id="checkout-modal">
-        <div class="popup-box" style="max-width: 450px;">
+        <div class="popup-box" style="max-width: 480px;">
             <button class="close-popup" onclick="closeModal()">&times;</button>
-            <h2 style="margin-bottom: 20px; text-align: center;" class="gradient-text">Hai să discutăm</h2>
-            <p style="text-align: center; color: var(--text-muted); margin-bottom:25px; font-size: 0.95rem;">Un expert Nexora te va contacta telefonic sau pe email în max 24h.</p>
             
-            <form id="checkout-form">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <input type="text" id="order-name" required placeholder="Companie / Numele tău complet" style="width: 100%; padding: 14px; border-radius: 8px;">
-                </div>
+            <div id="modal-form-content">
+                <h2 style="margin-bottom: 12px; text-align: center;" class="gradient-text">Hai să discutăm</h2>
+                <p id="modal-package-title" style="text-align: center; color: var(--accent-blue); font-weight: 600; margin-bottom: 8px; font-size: 0.95rem;"></p>
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 22px; font-size: 0.9rem;">Un expert Nexora te va contacta în maximum 24h.</p>
                 
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <input type="text" id="order-phone" required placeholder="Telefon sau Adresă E-mail" style="width: 100%; padding: 14px; border-radius: 8px;">
-                </div>
-                
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <textarea id="order-address" required placeholder="Descrie pe scurt ce ai nevoie (Ex: Vreau un site de prezentare pentru un cabinet medical...)" rows="4" style="width: 100%; padding: 14px; border-radius: 8px; resize: none;"></textarea>
-                </div>
-                
-                <input type="hidden" id="order-notes" value="">
+                <form id="checkout-form">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <input type="text" id="order-name" required minlength="3" placeholder="Nume complet sau Companie" style="width: 100%; padding: 14px; border-radius: 8px;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <input type="text" id="order-phone" required minlength="6" placeholder="Număr de telefon sau E-mail" style="width: 100%; padding: 14px; border-radius: 8px;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <textarea id="order-address" required minlength="10" placeholder="Descrie pe scurt ce ai nevoie (Ex: Vreau un magazin online pentru vânzare haine...)" rows="3" style="width: 100%; padding: 14px; border-radius: 8px; resize: none;"></textarea>
+                    </div>
+                    
+                    <input type="hidden" id="order-notes" value="">
 
-                <button type="submit" class="btn-primary" id="btn-submit-order" style="width: 100%; padding: 16px; font-size:1.1rem; border-radius:12px;">Trimite și te sunăm</button>
-            </form>
+                    <button type="submit" class="btn-primary" id="btn-submit-order" style="width: 100%; padding: 16px; font-size:1.1rem; border-radius:12px;">Trimite Solicitarea</button>
+                </form>
+            </div>
+
+            <!-- Ecran de succes care apare după trimitere -->
+            <div id="modal-success-content" style="display: none; text-align: center; padding: 20px 0;">
+                <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--success); margin-bottom: 20px;"></i>
+                <h2 style="color: var(--text-main); font-size: 1.8rem; margin-bottom: 10px;">Cerere Înregistrată!</h2>
+                <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6;">Am recepționat detaliile proiectului tău. Echipa Nexora te va contacta în cel mai scurt timp.</p>
+                <button type="button" onclick="closeModal()" class="btn-primary" style="margin-top: 25px; width: 100%;">Închide</button>
+            </div>
         </div>
     </div>
 
-    <!-- Scripturile de bază -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="script.js?v=3.0"></script>
 
     <script>
-        // Funcții globale sigure pentru deschiderea și închiderea modalului
-        window.openModal = function(packageName = 'Contact General', price = 0) {
-            const modal = document.getElementById('checkout-modal');
-            if (modal) modal.classList.add('show');
-            const notes = document.getElementById('order-notes');
-            if (notes) {
-                notes.value = packageName !== 'Contact General' ? `Pachet vizat: ${packageName} (${price} Lei)` : 'Cerere Generală';
-            }
-        };
-
-        window.closeModal = function() {
-            const modal = document.getElementById('checkout-modal');
-            if (modal) modal.classList.remove('show');
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => observer.observe(el));
-
-        window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-loader').classList.add('hidden'); }, 600); });
-
-        window.switchTab = function(tabId, btn) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            btn.classList.add('active'); 
-            const target = document.getElementById(tabId);
-            if (target) target.classList.add('active');
-        };
-
         const firebaseConfig = {
             apiKey: "AIzaSyDDNH1J_X9qldqQP4LYmpfwtAkwLiMXV6I",
             authDomain: "my-website-5f664.firebaseapp.com",
@@ -254,7 +234,122 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Încărcare dinamică a pachetelor din Firebase
+        // Control Modal
+        window.openModal = function(packageName = 'Contact General', price = 0) {
+            const modal = document.getElementById('checkout-modal');
+            const formContent = document.getElementById('modal-form-content');
+            const successContent = document.getElementById('modal-success-content');
+            const packageTitle = document.getElementById('modal-package-title');
+            const notes = document.getElementById('order-notes');
+
+            if (formContent) formContent.style.display = 'block';
+            if (successContent) successContent.style.display = 'none';
+
+            if (packageTitle) {
+                packageTitle.innerText = packageName !== 'Contact General' ? `Pachet selectat: ${packageName}` : 'Consultanță Generală Nexora';
+            }
+            if (notes) {
+                notes.value = packageName !== 'Contact General' ? `Pachet vizat: ${packageName} (${price} Lei)` : 'Cerere Generală';
+            }
+            if (modal) modal.classList.add('show');
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('checkout-modal');
+            if (modal) modal.classList.remove('show');
+        };
+
+        // Procesare Trimitere Formular Principal (Lead Nou)
+        const checkoutForm = document.getElementById('checkout-form');
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = document.getElementById('btn-submit-order');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
+
+                const orderData = {
+                    customerName: document.getElementById('order-name').value.trim(),
+                    customerContact: document.getElementById('order-phone').value.trim(),
+                    projectDescription: document.getElementById('order-address').value.trim(),
+                    packageInterested: document.getElementById('order-notes').value.trim(),
+                    status: 'lead_nou',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                try {
+                    await db.collection('orders').add(orderData);
+                    
+                    if (typeof gtag === 'function') {
+                        gtag('event', 'generate_lead', { currency: 'RON', value: 100 });
+                    }
+
+                    document.getElementById('modal-form-content').style.display = 'none';
+                    document.getElementById('modal-success-content').style.display = 'block';
+                    checkoutForm.reset();
+                } catch (error) {
+                    console.error("Eroare la salvare în Firebase:", error);
+                    alert("A apărut o problemă la conexiune. Reîncearcă!");
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Trimite Solicitarea';
+                }
+            });
+        }
+
+        // Procesare Formular Audit Footer
+        const footForm = document.getElementById('footer-form');
+        if (footForm) {
+            footForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = footForm.querySelector('button');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
+
+                try {
+                    await db.collection('subscribers').add({
+                        name: document.getElementById('foot-name').value.trim(),
+                        email: document.getElementById('foot-email').value.trim(),
+                        type: 'solicitare_audit_gratuit',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    footForm.innerHTML = `
+                        <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h4 style="color:#10b981; margin-bottom:5px;"><i class="fas fa-check"></i> Audit Solicitat!</h4>
+                            <p style="color:var(--text-main); font-size:0.85rem;">Te vom contacta în 24h cu raportul.</p>
+                        </div>`;
+                } catch (err) {
+                    console.error("Eroare trimitere audit:", err);
+                    btn.disabled = false;
+                    btn.innerHTML = 'Reîncearcă';
+                }
+            });
+        }
+
+        // Animații la scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => observer.observe(el));
+
+        window.addEventListener('load', () => { 
+            setTimeout(() => { 
+                const loader = document.getElementById('intro-loader');
+                if (loader) loader.classList.add('hidden'); 
+            }, 600); 
+        });
+
+        // Schimbare Tab-uri
+        window.switchTab = function(tabId, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active'); 
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+        };
+
+        // Încărcare dinamică produse
         db.collection('products').where('active', '==', true).onSnapshot(snapshot => {
             const gridPrezentare = document.getElementById('menu-grid-prezentare');
             const gridEcommerce = document.getElementById('menu-grid-ecommerce');
