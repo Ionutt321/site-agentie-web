@@ -334,7 +334,7 @@
         </div>
     </footer>
 
-    <!-- Formular Popup Direct de Ofertă (Păstrat pentru butoanele de pe pachete) -->
+    <!-- Formular Popup Direct de Ofertă -->
     <div class="popup-overlay" id="checkout-modal">
         <div class="popup-box" style="max-width: 480px;">
             <button class="close-popup" onclick="closeModal()">&times;</button>
@@ -394,13 +394,11 @@
         // ----------------------------------------------------
         let quizLeadData = { industrie: '', obiectiv: '', functionalitati: [] };
 
-        // Gestionare tranzitii pagini Quiz
         window.goToStep = function(stepNumber) {
             document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
             document.getElementById(`quiz-step-${stepNumber}`).classList.add('active');
         };
 
-        // Capturare click pe butoanele din Quiz (Pas 1 și 2)
         document.querySelectorAll('.quiz-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const step = this.getAttribute('data-step');
@@ -416,7 +414,7 @@
             });
         });
 
-        // Trimitere Formular Quiz către Firebase (Fără a mai depinde de Vercel/CORS)
+        // 1. TRIMITE QUIZ FUNNEL -> Telegram & Firestore
         document.getElementById('btn-submit-quiz').addEventListener('click', async () => {
             const nameInput = document.getElementById('quiz-name').value.trim();
             const phoneInput = document.getElementById('quiz-phone').value.trim();
@@ -426,7 +424,6 @@
                 return;
             }
 
-            // Colectăm funcționalitățile bifate
             const checkedFeatures = [];
             document.querySelectorAll('.feature-checkbox:checked').forEach(cb => {
                 checkedFeatures.push(cb.value);
@@ -438,7 +435,6 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
 
             try {
-                // Salvăm direct în baza de date Firebase (colecția leads) folosind conexiunea deja setată
                 await db.collection('leads').add({
                     nume: nameInput,
                     telefon: phoneInput,
@@ -450,18 +446,20 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                // Notificare automată Telegram prin endpoint-ul din api/notify.js
                 fetch('/api/notify', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
+                        tip: 'quiz_funnel',
                         nume: nameInput,
-                        telefon: phoneInput,
-                        industrie: quizLeadData.industrie,
-                        obiectiv: quizLeadData.obiectiv,
-                        functionalitati: quizLeadData.functionalitati
+                        contact: phoneInput,
+                        extra: {
+                            industrie: quizLeadData.industrie,
+                            obiectiv: quizLeadData.obiectiv,
+                            functionalitati: quizLeadData.functionalitati
+                        }
                     })
-                }).catch(err => console.warn('Notificare Telegram eșuată:', err));
+                }).catch(err => console.warn('Telegram error:', err));
 
                 if (typeof gtag === 'function') {
                     gtag('event', 'generate_lead', { currency: 'RON', value: 200, lead_type: 'quiz_funnel' });
@@ -469,7 +467,7 @@
 
                 goToStep('success');
             } catch (error) {
-                console.error("Eroare salvare lead quiz:", error);
+                console.error("Eroare Quiz:", error);
                 alert("A apărut o problemă. Te rugăm să reîncerci.");
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Trimite Solicitarea 🚀';
@@ -477,7 +475,7 @@
         });
         // ----------------------------------------------------
 
-        // Control Modal (Existent)
+        // Control Modal
         window.openModal = function(packageName = 'Contact General', price = 0) {
             const modal = document.getElementById('checkout-modal');
             const formContent = document.getElementById('modal-form-content');
@@ -502,7 +500,7 @@
             if (modal) modal.classList.remove('show');
         };
 
-        // Procesare Trimitere Formular Modal (Existent)
+        // 2. TRIMITE COMANDĂ MODAL -> Telegram & Firestore
         const checkoutForm = document.getElementById('checkout-form');
         if (checkoutForm) {
             checkoutForm.addEventListener('submit', async (e) => {
@@ -511,18 +509,33 @@
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
 
-                const orderData = {
-                    customerName: document.getElementById('order-name').value.trim(),
-                    customerContact: document.getElementById('order-phone').value.trim(),
-                    projectDescription: document.getElementById('order-address').value.trim(),
-                    packageInterested: document.getElementById('order-notes').value.trim(),
-                    status: 'lead_nou',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
+                const customerName = document.getElementById('order-name').value.trim();
+                const customerContact = document.getElementById('order-phone').value.trim();
+                const projectDescription = document.getElementById('order-address').value.trim();
+                const packageInterested = document.getElementById('order-notes').value.trim() || 'Cerere Generală';
 
                 try {
-                    await db.collection('orders').add(orderData);
+                    await db.collection('orders').add({
+                        customerName: customerName,
+                        customerContact: customerContact,
+                        projectDescription: projectDescription,
+                        packageInterested: packageInterested,
+                        status: 'lead_nou',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
                     
+                    fetch('/api/notify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tip: 'modal_comanda',
+                            nume: customerName,
+                            contact: customerContact,
+                            pachet: packageInterested,
+                            detalii: projectDescription
+                        })
+                    }).catch(err => console.warn('Telegram error:', err));
+
                     if (typeof gtag === 'function') {
                         gtag('event', 'generate_lead', { currency: 'RON', value: 100 });
                     }
@@ -531,8 +544,8 @@
                     document.getElementById('modal-success-content').style.display = 'block';
                     checkoutForm.reset();
                 } catch (error) {
-                    console.error("Eroare la salvare în Firebase:", error);
-                    alert("A apărut o problemă la conexiune. Reîncearcă!");
+                    console.error("Eroare salvare Modal:", error);
+                    alert("A apărut o problemă. Reîncearcă!");
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = 'Trimite Solicitarea';
@@ -540,7 +553,7 @@
             });
         }
 
-        // Procesare Formular Audit Footer (Existent)
+        // 3. TRIMITE AUDIT FOOTER -> Telegram & Firestore
         const footForm = document.getElementById('footer-form');
         if (footForm) {
             footForm.addEventListener('submit', async (e) => {
@@ -549,13 +562,26 @@
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
 
+                const footName = document.getElementById('foot-name').value.trim();
+                const footEmail = document.getElementById('foot-email').value.trim();
+
                 try {
                     await db.collection('subscribers').add({
-                        name: document.getElementById('foot-name').value.trim(),
-                        email: document.getElementById('foot-email').value.trim(),
+                        name: footName,
+                        email: footEmail,
                         type: 'solicitare_audit_gratuit',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
+
+                    fetch('/api/notify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tip: 'audit_footer',
+                            nume: footName,
+                            contact: footEmail
+                        })
+                    }).catch(err => console.warn('Telegram error:', err));
 
                     footForm.innerHTML = `
                         <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; padding: 15px; border-radius: 8px; text-align: center;">
@@ -570,7 +596,7 @@
             });
         }
 
-        // Animații la scroll (Existent)
+        // Animații la scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
@@ -583,7 +609,7 @@
             }, 600); 
         });
 
-        // Schimbare Tab-uri (Existent)
+        // Schimbare Tab-uri
         window.switchTab = function(tabId, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -609,7 +635,6 @@
                 productsList.push(doc.data());
             });
 
-            // Ordonare crescătoare după preț (Starter -> Pro -> Corporate / Suport -> VIP)
             productsList.sort((a, b) => (a.price || 0) - (b.price || 0));
 
             productsList.forEach(p => {
