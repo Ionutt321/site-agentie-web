@@ -49,7 +49,8 @@ export default async function handler(req, res) {
   } else if (tip === 'audit_footer') {
     titlu = `🔍 <b>SOLICITARE AUDIT GRATUIT (FOOTER)</b>`;
     corpMesaj = `👤 <b>Companie / Nume:</b> ${nume}\n` +
-                `✉️ <b>E-mail:</b> ${email || telefon || 'Nespecificat'}\n` +
+                `📞 <b>Telefon:</b> ${telefon || '-'}${linkWhatsApp}\n` +
+                `✉️ <b>E-mail:</b> ${email || '-'}\n` +
                 `📄 <b>Tip:</b> Solicitare raport viteză & conversii`;
   } else if (tip === 'quiz_funnel') {
     const functText = functionalitati && functionalitati.length ? functionalitati.join(', ') : 'Niciuna selectată';
