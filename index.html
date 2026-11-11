@@ -271,8 +271,11 @@
                 <div class="form-group" style="margin-bottom: 15px;">
                     <input type="text" id="quiz-name" required placeholder="Numele tău complet" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: white;">
                 </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="tel" id="quiz-phone" required placeholder="Număr de telefon / WhatsApp (ex: +40... sau +44...)" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: white;">
+                </div>
                 <div class="form-group" style="margin-bottom: 20px;">
-                    <input type="tel" id="quiz-phone" required placeholder="Telefon (WhatsApp) sau E-mail" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: white;">
+                    <input type="email" id="quiz-email" required placeholder="Adresă de e-mail (pentru transmiterea ofertei)" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: white;">
                 </div>
 
                 <button id="btn-submit-quiz" class="btn-primary" style="width: 100%; padding: 16px; font-size:1.1rem; border-radius:12px;">Trimite Solicitarea 🚀</button>
@@ -350,7 +353,11 @@
                     </div>
                     
                     <div class="form-group" style="margin-bottom: 15px;">
-                        <input type="text" id="order-phone" required minlength="6" placeholder="Număr de telefon sau E-mail" style="width: 100%; padding: 14px; border-radius: 8px;">
+                        <input type="tel" id="order-phone" required placeholder="Număr de telefon / WhatsApp (ex: +40... sau +44...)" style="width: 100%; padding: 14px; border-radius: 8px;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <input type="email" id="order-email" required placeholder="Adresă de e-mail (pentru transmiterea ofertei)" style="width: 100%; padding: 14px; border-radius: 8px;">
                     </div>
                     
                     <div class="form-group" style="margin-bottom: 20px;">
@@ -390,7 +397,24 @@
         const db = firebase.firestore();
 
         // ----------------------------------------------------
-        // LOGICĂ NOUĂ: QUIZ FUNNEL
+        // FUNCȚIE INTERNAȚIONALĂ DE VALIDARE TELEFON ȘI EMAIL
+        // ----------------------------------------------------
+        function valideazaDateContact(telefon, email) {
+            const cifreTelefon = (telefon || '').replace(/\D/g, '');
+            if (cifreTelefon.length < 8 || cifreTelefon.length > 15) {
+                alert("Te rugăm să introduci un număr de telefon valid (între 8 și 15 cifre, incluzând prefixul internațional dacă este cazul).");
+                return false;
+            }
+            const regexEmail = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+            if (!regexEmail.test((email || '').trim())) {
+                alert("Te rugăm să introduci o adresă de e-mail corectă (ex: contact@domeniu.com).");
+                return false;
+            }
+            return true;
+        }
+
+        // ----------------------------------------------------
+        // LOGICĂ: QUIZ FUNNEL
         // ----------------------------------------------------
         let quizLeadData = { industrie: '', obiectiv: '', functionalitati: [] };
 
@@ -418,9 +442,14 @@
         document.getElementById('btn-submit-quiz').addEventListener('click', async () => {
             const nameInput = document.getElementById('quiz-name').value.trim();
             const phoneInput = document.getElementById('quiz-phone').value.trim();
+            const emailInput = document.getElementById('quiz-email').value.trim();
             
-            if (nameInput.length < 3 || phoneInput.length < 6) {
-                alert('Te rugăm să completezi un nume și un date de contact valide.');
+            if (nameInput.length < 3) {
+                alert('Te rugăm să completezi un nume valid (minim 3 caractere).');
+                return;
+            }
+
+            if (!valideazaDateContact(phoneInput, emailInput)) {
                 return;
             }
 
@@ -438,6 +467,7 @@
                 await db.collection('leads').add({
                     nume: nameInput,
                     telefon: phoneInput,
+                    email: emailInput,
                     industrie: quizLeadData.industrie,
                     obiectiv: quizLeadData.obiectiv,
                     functionalitati: quizLeadData.functionalitati,
@@ -452,11 +482,14 @@
                     body: JSON.stringify({
                         tip: 'quiz_funnel',
                         nume: nameInput,
+                        telefon: phoneInput,
+                        email: emailInput,
                         contact: phoneInput,
                         extra: {
                             industrie: quizLeadData.industrie,
                             obiectiv: quizLeadData.obiectiv,
-                            functionalitati: quizLeadData.functionalitati
+                            functionalitati: quizLeadData.functionalitati,
+                            email: emailInput
                         }
                     })
                 }).catch(err => console.warn('Telegram error:', err));
@@ -505,19 +538,26 @@
         if (checkoutForm) {
             checkoutForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                const customerName = document.getElementById('order-name').value.trim();
+                const customerPhone = document.getElementById('order-phone').value.trim();
+                const customerEmail = document.getElementById('order-email').value.trim();
+                const projectDescription = document.getElementById('order-address').value.trim();
+                const packageInterested = document.getElementById('order-notes').value.trim() || 'Cerere Generală';
+
+                if (!valideazaDateContact(customerPhone, customerEmail)) {
+                    return;
+                }
+
                 const submitBtn = document.getElementById('btn-submit-order');
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
 
-                const customerName = document.getElementById('order-name').value.trim();
-                const customerContact = document.getElementById('order-phone').value.trim();
-                const projectDescription = document.getElementById('order-address').value.trim();
-                const packageInterested = document.getElementById('order-notes').value.trim() || 'Cerere Generală';
-
                 try {
                     await db.collection('orders').add({
                         customerName: customerName,
-                        customerContact: customerContact,
+                        customerContact: customerPhone,
+                        customerEmail: customerEmail,
                         projectDescription: projectDescription,
                         packageInterested: packageInterested,
                         status: 'lead_nou',
@@ -530,7 +570,9 @@
                         body: JSON.stringify({
                             tip: 'modal_comanda',
                             nume: customerName,
-                            contact: customerContact,
+                            contact: customerPhone,
+                            telefon: customerPhone,
+                            email: customerEmail,
                             pachet: packageInterested,
                             detalii: projectDescription
                         })
@@ -565,6 +607,14 @@
                 const footName = document.getElementById('foot-name').value.trim();
                 const footEmail = document.getElementById('foot-email').value.trim();
 
+                const regexEmail = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+                if (!regexEmail.test(footEmail)) {
+                    alert("Te rugăm să introduci o adresă de e-mail corectă.");
+                    btn.disabled = false;
+                    btn.innerHTML = 'Vreau Auditul Gratuit';
+                    return;
+                }
+
                 try {
                     await db.collection('subscribers').add({
                         name: footName,
@@ -579,7 +629,8 @@
                         body: JSON.stringify({
                             tip: 'audit_footer',
                             nume: footName,
-                            contact: footEmail
+                            contact: footEmail,
+                            email: footEmail
                         })
                     }).catch(err => console.warn('Telegram error:', err));
 
