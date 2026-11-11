@@ -63,6 +63,117 @@ h1, h2, h3, h4, .logo { font-family: 'Space Grotesk', sans-serif; }
 .step-num { font-size: 3rem; font-weight: 800; color: rgba(255,255,255,0.05); position: absolute; top: 15px; right: 20px; font-family: 'Space Grotesk', sans-serif; }
 .process-card h3 { color: var(--accent-blue); font-size: 1.2rem; margin-bottom: 15px; margin-top: 20px; }
 
+/* =========================================================
+   PORTOFOLIU (Carduri Proiecte Recente)
+========================================================= */
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.portfolio-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 35px 30px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.portfolio-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15);
+}
+
+.portfolio-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: var(--accent-blue);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.portfolio-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.portfolio-icon {
+    font-size: 2.2rem;
+    color: var(--accent-blue);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.portfolio-header h3 {
+    font-size: 1.35rem;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.portfolio-metric {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--success);
+}
+
+.portfolio-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.portfolio-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 30px;
+}
+
+.portfolio-tags span {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 0.8rem;
+    padding: 5px 12px;
+    border-radius: 6px;
+}
+
+.portfolio-btn {
+    margin-top: auto;
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.portfolio-btn:hover {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: #fff;
+}
+
 /* Secțiune Ticker */
 .rollercoaster-section { padding: 40px 0; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); overflow: hidden; }
 .marquee-container { display: flex; width: 200%; animation: scrollTech 25s linear infinite; }
@@ -143,7 +254,7 @@ h1, h2, h3, h4, .logo { font-family: 'Space Grotesk', sans-serif; }
     background: rgba(59, 130, 246, 0.1); 
     border-color: var(--accent-blue); 
     color: #fff; 
-    transform: translateY(-2px);
+    transform: translateY(-2px); 
     box-shadow: 0 5px 15px rgba(59, 130, 246, 0.15);
 }
 .quiz-step { 
