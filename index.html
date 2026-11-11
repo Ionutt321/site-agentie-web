@@ -39,7 +39,7 @@
       gtag('config', 'G-92QLTW6HV5');
     </script>
     
-    <!-- Stiluri specifice pentru Quiz Funnel & Widget WhatsApp -->
+    <!-- Stiluri specifice pentru Quiz Funnel, Widget WhatsApp & Banner Cookie -->
     <style>
         @media(max-width: 768px){ .hide-mobile { display:none; } }
         .quiz-container { max-width: 700px; margin: 0 auto; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 40px; border-radius: 12px; text-align: center; }
@@ -110,6 +110,59 @@
             }
             .whatsapp-tooltip {
                 display: none;
+            }
+        }
+
+        /* Banner Consimțământ Cookie-uri (GDPR) */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(11, 15, 25, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            padding: 16px 24px;
+            z-index: 10000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.5);
+            animation: slideUpCookie 0.4s ease-out forwards;
+        }
+        @keyframes slideUpCookie {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .cookie-text {
+            color: var(--text-muted);
+            font-size: 0.86rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .cookie-text a {
+            color: var(--accent-blue);
+            text-decoration: underline;
+        }
+        .cookie-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        @media (max-width: 768px) {
+            .cookie-banner {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 16px 18px;
+                gap: 12px;
+            }
+            .cookie-actions {
+                width: 100%;
+            }
+            .cookie-actions button {
+                width: 100%;
             }
         }
     </style>
@@ -483,6 +536,16 @@
         </div>
     </div>
 
+    <!-- Banner Consimțământ Cookie-uri (GDPR) -->
+    <div id="cookie-banner" class="cookie-banner" style="display: none;">
+        <p class="cookie-text">
+            Folosim module cookie pentru a îmbunătăți performanța platformei și a analiza traficul web conform <a href="politica-de-confidentialitate.html" target="_blank">Politicii de Confidențialitate</a>. Continuarea navigării implică acordul tău.
+        </p>
+        <div class="cookie-actions">
+            <button id="btn-accept-cookies" class="btn-primary" style="padding: 10px 22px; font-size: 0.88rem; border-radius: 8px;">Am înțeles</button>
+        </div>
+    </div>
+
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -842,6 +905,25 @@
 
             setTimeout(() => { document.querySelectorAll('.menu-card.reveal-up').forEach(el => observer.observe(el)); }, 100);
         });
+
+        // ----------------------------------------------------
+        // LOGICĂ CONSImȚĂMÂNT COOKIE-URI (GDPR)
+        // ----------------------------------------------------
+        const cookieBanner = document.getElementById('cookie-banner');
+        const acceptCookiesBtn = document.getElementById('btn-accept-cookies');
+
+        if (cookieBanner && acceptCookiesBtn) {
+            if (!localStorage.getItem('nexora_cookies_accepted')) {
+                setTimeout(() => {
+                    cookieBanner.style.display = 'flex';
+                }, 800);
+            }
+
+            acceptCookiesBtn.addEventListener('click', () => {
+                localStorage.setItem('nexora_cookies_accepted', 'true');
+                cookieBanner.style.display = 'none';
+            });
+        }
     </script>
 </body>
 </html>
