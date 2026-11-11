@@ -14,6 +14,23 @@
       gtag('js', new Date());
       gtag('config', 'G-92QLTW6HV5');
     </script>
+    
+    <!-- Stiluri specifice pentru Quiz Funnel -->
+    <style>
+        @media(max-width: 768px){ .hide-mobile { display:none; } }
+        .quiz-container { max-width: 700px; margin: 0 auto; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 40px; border-radius: 12px; text-align: center; }
+        .quiz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; margin-bottom: 20px; }
+        @media(max-width: 600px) { .quiz-grid { grid-template-columns: 1fr; } }
+        .quiz-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); padding: 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 1rem; font-family: inherit; }
+        .quiz-btn:hover { background: rgba(96, 165, 250, 0.1); border-color: var(--accent-blue); color: var(--accent-blue); }
+        .quiz-step { display: none; animation: fadeIn 0.4s ease forwards; }
+        .quiz-step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .quiz-back-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; text-decoration: underline; margin-top: 15px; font-size: 0.9rem; }
+        .quiz-back-btn:hover { color: var(--text-main); }
+        .feature-checkbox { accent-color: var(--accent-blue); transform: scale(1.2); margin-right: 8px; cursor: pointer; }
+        .checkbox-label { display: flex; align-items: center; justify-content: center; margin: 10px 0; color: var(--text-main); cursor: pointer; font-size: 0.95rem; }
+    </style>
 </head>
 <body>
 
@@ -34,7 +51,6 @@
             </button>
         </div>
     </nav>
-    <style>@media(max-width: 768px){ .hide-mobile { display:none; } }</style>
 
     <section id="hero" class="hero">
         <div class="reveal-up">
@@ -42,7 +58,7 @@
             <h1>CONSTRUIM ECOSISTEME DIGITALE<br><span class="gradient-text">CARE GENEREAZĂ CLIENȚI</span></h1>
             <p>Nu facem doar „site-uri frumoase”. Creăm platforme web ultra-rapide și magazine online cu arhitectură gândită pentru conversie și scalare B2B/B2C.</p>
             <div style="display:flex; gap:15px; flex-wrap:wrap;">
-                <button onclick="document.getElementById('pachete').scrollIntoView({behavior:'smooth'})" class="btn-primary">Vezi Pachetele Web</button>
+                <button onclick="document.getElementById('quiz-section').scrollIntoView({behavior:'smooth'})" class="btn-primary">Află cât costă site-ul tău</button>
                 <button onclick="document.getElementById('portofoliu').scrollIntoView({behavior:'smooth'})" class="btn-outline">Vezi Portofoliul</button>
             </div>
         </div>
@@ -133,6 +149,73 @@
         </div>
     </section>
 
+    <!-- ============================================== -->
+    <!-- SECȚIUNEA NOUĂ: QUIZ FUNNEL INTERACTIV         -->
+    <!-- ============================================== -->
+    <section id="quiz-section" class="process-section reveal-up">
+        <div class="section-title">
+            <h2>Configurează-ți site-ul în <span class="gradient-text">60 de secunde</span></h2>
+            <p>Răspunde la câteva întrebări simple și primești o ofertă personalizată, fără obligații.</p>
+        </div>
+
+        <div class="quiz-container">
+            <!-- Pasul 1: Industria -->
+            <div class="quiz-step active" id="quiz-step-1">
+                <h3 style="color:var(--text-main); margin-bottom:10px;">1. Din ce domeniu face parte afacerea ta?</h3>
+                <div class="quiz-grid">
+                    <button class="quiz-btn" data-step="1" data-val="Beauty & Saloane">✂️ Beauty & Saloane</button>
+                    <button class="quiz-btn" data-step="1" data-val="Sănătate & Medical">🏥 Sănătate & Medical</button>
+                    <button class="quiz-btn" data-step="1" data-val="HoReCa">☕ HoReCa (Restaurante/Cafenele)</button>
+                    <button class="quiz-btn" data-step="1" data-val="Construcții & Servicii">🛠️ Construcții & Meseriași</button>
+                    <button class="quiz-btn" data-step="1" data-val="B2B & Consultanță">💼 B2B & Consultanță</button>
+                    <button class="quiz-btn" data-step="1" data-val="Magazin Online">🛒 Magazin Online / Altul</button>
+                </div>
+            </div>
+
+            <!-- Pasul 2: Obiectivul -->
+            <div class="quiz-step" id="quiz-step-2">
+                <h3 style="color:var(--text-main); margin-bottom:10px;">2. Care este principalul tău scop cu noul site?</h3>
+                <div class="quiz-grid">
+                    <button class="quiz-btn" data-step="2" data-val="Să atrag clienți noi">🚀 Vreau să atrag clienți noi</button>
+                    <button class="quiz-btn" data-step="2" data-val="Să preiau programări online">📅 Vreau programări online</button>
+                    <button class="quiz-btn" data-step="2" data-val="O imagine profesională">✨ Vreau o imagine profesională</button>
+                    <button class="quiz-btn" data-step="2" data-val="Să vând produse">📦 Vreau să vând produse online</button>
+                </div>
+                <button class="quiz-back-btn" onclick="goToStep(1)">← Înapoi la pasul anterior</button>
+            </div>
+
+            <!-- Pasul 3: Colectarea Datelor & Finalizare -->
+            <div class="quiz-step" id="quiz-step-3">
+                <h3 style="color:var(--text-main); margin-bottom:20px;">Aproape gata! Unde îți trimitem propunerea?</h3>
+                
+                <div style="margin-bottom: 25px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px;">
+                    <h4 style="color:var(--text-main); margin-bottom:15px; text-align:center;">Selectează funcționalitățile dorite:</h4>
+                    <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Asistent AI"> 🤖 Asistent Chatbot AI (24/7)</label>
+                    <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Integrare WhatsApp"> 📱 Buton conectare directă WhatsApp</label>
+                    <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Recenzii Automate"> ⭐ Sistem obținere Recenzii Google</label>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="text" id="quiz-name" required placeholder="Numele tău complet" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: white;">
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <input type="tel" id="quiz-phone" required placeholder="Telefon (WhatsApp) sau E-mail" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: white;">
+                </div>
+
+                <button id="btn-submit-quiz" class="btn-primary" style="width: 100%; padding: 16px; font-size:1.1rem; border-radius:12px;">Trimite Solicitarea 🚀</button>
+                <button class="quiz-back-btn" onclick="goToStep(2)">← Înapoi</button>
+            </div>
+            
+            <!-- Ecran Succes Quiz -->
+            <div class="quiz-step" id="quiz-step-success">
+                <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--success); margin-bottom: 20px;"></i>
+                <h2 style="color: var(--text-main); font-size: 1.8rem; margin-bottom: 10px;">Cerere Trimisă cu Succes!</h2>
+                <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6;">Am înregistrat preferințele tale. Un expert Nexora te va contacta în scurt timp cu oferta personalizată.</p>
+            </div>
+        </div>
+    </section>
+    <!-- ============================================== -->
+
     <section id="faq" class="faq-section reveal-up">
         <div class="section-title">
             <h2>Întrebări Frecvente</h2>
@@ -178,7 +261,7 @@
         </div>
     </footer>
 
-    <!-- Formular Popup Direct de Ofertă -->
+    <!-- Formular Popup Direct de Ofertă (Păstrat pentru butoanele de pe pachete) -->
     <div class="popup-overlay" id="checkout-modal">
         <div class="popup-box" style="max-width: 480px;">
             <button class="close-popup" onclick="closeModal()">&times;</button>
@@ -207,7 +290,6 @@
                 </form>
             </div>
 
-            <!-- Ecran de succes care apare după trimitere -->
             <div id="modal-success-content" style="display: none; text-align: center; padding: 20px 0;">
                 <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--success); margin-bottom: 20px;"></i>
                 <h2 style="color: var(--text-main); font-size: 1.8rem; margin-bottom: 10px;">Cerere Înregistrată!</h2>
@@ -234,7 +316,82 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Control Modal
+        // ----------------------------------------------------
+        // LOGICĂ NOUĂ: QUIZ FUNNEL
+        // ----------------------------------------------------
+        let quizLeadData = { industrie: '', obiectiv: '', functionalitati: [] };
+
+        // Gestionare tranzitii pagini Quiz
+        window.goToStep = function(stepNumber) {
+            document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+            document.getElementById(`quiz-step-${stepNumber}`).classList.add('active');
+        };
+
+        // Capturare click pe butoanele din Quiz (Pas 1 și 2)
+        document.querySelectorAll('.quiz-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const step = this.getAttribute('data-step');
+                const val = this.getAttribute('data-val');
+                
+                if (step === '1') {
+                    quizLeadData.industrie = val;
+                    goToStep(2);
+                } else if (step === '2') {
+                    quizLeadData.obiectiv = val;
+                    goToStep(3);
+                }
+            });
+        });
+
+        // Trimitere Formular Quiz către Firebase (Fără a mai depinde de Vercel/CORS)
+        document.getElementById('btn-submit-quiz').addEventListener('click', async () => {
+            const nameInput = document.getElementById('quiz-name').value.trim();
+            const phoneInput = document.getElementById('quiz-phone').value.trim();
+            
+            if (nameInput.length < 3 || phoneInput.length < 6) {
+                alert('Te rugăm să completezi un nume și un date de contact valide.');
+                return;
+            }
+
+            // Colectăm funcționalitățile bifate
+            const checkedFeatures = [];
+            document.querySelectorAll('.feature-checkbox:checked').forEach(cb => {
+                checkedFeatures.push(cb.value);
+            });
+            quizLeadData.functionalitati = checkedFeatures;
+
+            const submitBtn = document.getElementById('btn-submit-quiz');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
+
+            try {
+                // Salvăm direct în baza de date Firebase (colecția leads) folosind conexiunea deja setată
+                await db.collection('leads').add({
+                    nume: nameInput,
+                    telefon: phoneInput,
+                    industrie: quizLeadData.industrie,
+                    obiectiv: quizLeadData.obiectiv,
+                    functionalitati: quizLeadData.functionalitati,
+                    status: 'Nou',
+                    sursa: 'Quiz Funnel Homepage',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                if (typeof gtag === 'function') {
+                    gtag('event', 'generate_lead', { currency: 'RON', value: 200, lead_type: 'quiz_funnel' });
+                }
+
+                goToStep('success');
+            } catch (error) {
+                console.error("Eroare salvare lead quiz:", error);
+                alert("A apărut o problemă. Te rugăm să reîncerci.");
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Trimite Solicitarea 🚀';
+            }
+        });
+        // ----------------------------------------------------
+
+        // Control Modal (Existent)
         window.openModal = function(packageName = 'Contact General', price = 0) {
             const modal = document.getElementById('checkout-modal');
             const formContent = document.getElementById('modal-form-content');
@@ -259,7 +416,7 @@
             if (modal) modal.classList.remove('show');
         };
 
-        // Procesare Trimitere Formular Principal (Lead Nou)
+        // Procesare Trimitere Formular Modal (Existent)
         const checkoutForm = document.getElementById('checkout-form');
         if (checkoutForm) {
             checkoutForm.addEventListener('submit', async (e) => {
@@ -297,7 +454,7 @@
             });
         }
 
-        // Procesare Formular Audit Footer
+        // Procesare Formular Audit Footer (Existent)
         const footForm = document.getElementById('footer-form');
         if (footForm) {
             footForm.addEventListener('submit', async (e) => {
@@ -327,7 +484,7 @@
             });
         }
 
-        // Animații la scroll
+        // Animații la scroll (Existent)
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
@@ -340,7 +497,7 @@
             }, 600); 
         });
 
-        // Schimbare Tab-uri
+        // Schimbare Tab-uri (Existent)
         window.switchTab = function(tabId, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -349,7 +506,7 @@
             if (target) target.classList.add('active');
         };
 
-        // Încărcare dinamică produse
+        // Încărcare dinamică produse (Existent)
         db.collection('products').where('active', '==', true).onSnapshot(snapshot => {
             const gridPrezentare = document.getElementById('menu-grid-prezentare');
             const gridEcommerce = document.getElementById('menu-grid-ecommerce');
