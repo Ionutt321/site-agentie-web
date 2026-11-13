@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://nexora.ro/sitemap.xml
+Sitemap: https://site-agentie-web.vercel.app/sitemap.xml
