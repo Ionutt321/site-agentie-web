@@ -48,15 +48,17 @@
         .quiz-container { max-width: 700px; margin: 0 auto; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 40px; border-radius: 12px; text-align: center; }
         .quiz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; margin-bottom: 20px; }
         @media(max-width: 600px) { .quiz-grid { grid-template-columns: 1fr; } }
-        .quiz-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); padding: 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 1rem; font-family: inherit; }
+        .quiz-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); padding: 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 1rem; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .quiz-btn i { color: var(--accent-blue); font-size: 1.1rem; transition: 0.3s; }
         .quiz-btn:hover { background: rgba(96, 165, 250, 0.1); border-color: var(--accent-blue); color: var(--accent-blue); }
         .quiz-step { display: none; animation: fadeIn 0.4s ease forwards; }
         .quiz-step.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .quiz-back-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; text-decoration: underline; margin-top: 15px; font-size: 0.9rem; }
         .quiz-back-btn:hover { color: var(--text-main); }
-        .feature-checkbox { accent-color: var(--accent-blue); transform: scale(1.2); margin-right: 8px; cursor: pointer; }
-        .checkbox-label { display: flex; align-items: center; justify-content: center; margin: 10px 0; color: var(--text-main); cursor: pointer; font-size: 0.95rem; }
+        .feature-checkbox { accent-color: var(--accent-blue); transform: scale(1.2); margin: 0; cursor: pointer; }
+        .checkbox-label { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 12px 0; color: var(--text-main); cursor: pointer; font-size: 0.95rem; }
+        .checkbox-label i { color: var(--accent-blue); width: 18px; text-align: center; font-size: 1.05rem; }
 
         /* Buton Flotant WhatsApp */
         .whatsapp-float {
@@ -399,12 +401,12 @@
             <div class="quiz-step active" id="quiz-step-1">
                 <h3 style="color:var(--text-main); margin-bottom:10px;">1. Din ce domeniu face parte afacerea ta?</h3>
                 <div class="quiz-grid">
-                    <button class="quiz-btn" data-step="1" data-val="Beauty & Saloane">✂️ Beauty & Saloane</button>
-                    <button class="quiz-btn" data-step="1" data-val="Sănătate & Medical">🏥 Sănătate & Medical</button>
-                    <button class="quiz-btn" data-step="1" data-val="HoReCa">☕ HoReCa (Restaurante/Cafenele)</button>
-                    <button class="quiz-btn" data-step="1" data-val="Construcții & Servicii">🛠️ Construcții & Meseriași</button>
-                    <button class="quiz-btn" data-step="1" data-val="B2B & Consultanță">💼 B2B & Consultanță</button>
-                    <button class="quiz-btn" data-step="1" data-val="Magazin Online">🛒 Magazin Online / Altul</button>
+                    <button class="quiz-btn" data-step="1" data-val="Beauty & Saloane"><i class="fas fa-spa"></i> Beauty & Saloane</button>
+                    <button class="quiz-btn" data-step="1" data-val="Sănătate & Medical"><i class="fas fa-stethoscope"></i> Sănătate & Medical</button>
+                    <button class="quiz-btn" data-step="1" data-val="HoReCa"><i class="fas fa-utensils"></i> HoReCa (Restaurante/Cafenele)</button>
+                    <button class="quiz-btn" data-step="1" data-val="Construcții & Servicii"><i class="fas fa-helmet-safety"></i> Construcții & Meseriași</button>
+                    <button class="quiz-btn" data-step="1" data-val="B2B & Consultanță"><i class="fas fa-briefcase"></i> B2B & Consultanță</button>
+                    <button class="quiz-btn" data-step="1" data-val="Magazin Online"><i class="fas fa-cart-shopping"></i> Magazin Online / Altul</button>
                 </div>
             </div>
 
@@ -412,10 +414,10 @@
             <div class="quiz-step" id="quiz-step-2">
                 <h3 style="color:var(--text-main); margin-bottom:10px;">2. Care este principalul tău scop cu noul site?</h3>
                 <div class="quiz-grid">
-                    <button class="quiz-btn" data-step="2" data-val="Să atrag clienți noi">🚀 Vreau să atrag clienți noi</button>
-                    <button class="quiz-btn" data-step="2" data-val="Să preiau programări online">📅 Vreau programări online</button>
-                    <button class="quiz-btn" data-step="2" data-val="O imagine profesională">✨ Vreau o imagine profesională</button>
-                    <button class="quiz-btn" data-step="2" data-val="Să vând produse">📦 Vreau să vând produse online</button>
+                    <button class="quiz-btn" data-step="2" data-val="Să atrag clienți noi"><i class="fas fa-arrow-trend-up"></i> Vreau să atrag clienți noi</button>
+                    <button class="quiz-btn" data-step="2" data-val="Să preiau programări online"><i class="fas fa-calendar-check"></i> Vreau programări online</button>
+                    <button class="quiz-btn" data-step="2" data-val="O imagine profesională"><i class="fas fa-award"></i> Vreau o imagine profesională</button>
+                    <button class="quiz-btn" data-step="2" data-val="Să vând produse"><i class="fas fa-box-open"></i> Vreau să vând produse online</button>
                 </div>
                 <button class="quiz-back-btn" onclick="goToStep(1)">← Înapoi la pasul anterior</button>
             </div>
@@ -426,9 +428,9 @@
                 
                 <div style="margin-bottom: 25px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px;">
                     <h4 style="color:var(--text-main); margin-bottom:15px; text-align:center;">Selectează funcționalitățile dorite:</h4>
-                    <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Asistent AI"> 🤖 Asistent Chatbot AI (24/7)</label>
-                    <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Integrare WhatsApp"> 📱 Buton conectare directă WhatsApp</label>
-                    <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Recenzii Automate"> ⭐ Sistem obținere Recenzii Google</label>
+                    <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Asistent AI"><i class="fas fa-robot"></i> Asistent Chatbot AI (24/7)</label>
+                    <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Integrare WhatsApp"><i class="fab fa-whatsapp"></i> Buton conectare directă WhatsApp</label>
+                    <label class="checkbox-label"><input type="checkbox" class="feature-checkbox" value="Recenzii Automate"><i class="fas fa-star"></i> Sistem obținere Recenzii Google</label>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 15px;">
@@ -441,7 +443,7 @@
                     <input type="email" id="quiz-email" required placeholder="Adresă de e-mail (pentru transmiterea ofertei)" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: white;">
                 </div>
 
-                <button id="btn-submit-quiz" class="btn-primary" style="width: 100%; padding: 16px; font-size:1.1rem; border-radius:12px;">Trimite Solicitarea 🚀</button>
+                <button id="btn-submit-quiz" class="btn-primary" style="width: 100%; padding: 16px; font-size:1.1rem; border-radius:12px;"><i class="fas fa-paper-plane" style="margin-right: 6px;"></i> Trimite Solicitarea</button>
                 <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 10px; line-height: 1.4;">Prin trimiterea solicitării, ești de acord cu prelucrarea datelor de contact conform <a href="politica-de-confidentialitate.html" target="_blank" style="color: var(--accent-blue); text-decoration: underline;">Politicii de Confidențialitate</a>. Fără obligații contractuale.</p>
                 <button class="quiz-back-btn" onclick="goToStep(2)">← Înapoi</button>
             </div>
@@ -698,7 +700,7 @@
                 console.error("Eroare Quiz:", error);
                 alert("A apărut o problemă. Te rugăm să reîncerci.");
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Trimite Solicitarea 🚀';
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right: 6px;"></i> Trimite Solicitarea';
             }
         });
         // ----------------------------------------------------
